@@ -218,7 +218,7 @@ function startGame() {
   gameStarted = true;
   timerActive = true;
   gameOver = false;
-  timer = 3; // タイマーをリセット
+  timer = 20; // タイマーをリセット
   fireworks = []; // 花火をリセット
   startTimer(); // タイマーを開始
   playBgm(bgm1);
