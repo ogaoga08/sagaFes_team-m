@@ -24,6 +24,32 @@ let fearfulG = 0;
 
 let shootingRate = 0.1;
 
+let bgm1, bgm2, bgm3, bgm4;
+let sfx1, sfx2, sfx3;
+let currentBgm;
+
+function preload() {
+  // BGMの音声ファイルをロード
+  bgm1 = loadSound('assets/sound/stage1.mp3');
+  bgm2 = loadSound('assets/sound/stage2.mp3');
+  bgm3 = loadSound('assets/sound/stage3.mp3');
+  bgm4 = loadSound('assets/sound/bgm.mp3');
+  
+  // 効果音の音声ファイルをロード
+  sfx1 = loadSound('assets/sound/hanabi.mp3');
+  sfx2 = loadSound('assets/sound/taiko.mp3');
+  sfx3 = loadSound('assets/sound/wind.mp3');
+
+  bgImage = loadImage('assets/image/3e15740d46c803a1fdb012617692e8f4_t.jpeg');
+}
+
+function sleep(waitMsec) {
+  var startMsec = new Date();
+
+  // 指定ミリ秒間だけループさせる（CPUは常にビジー状態）
+  while (new Date() - startMsec < waitMsec);
+}
+
 function setup() {
   canvas = createCanvas(windowWidth, windowHeight);
   colorMode(HSB);
@@ -48,21 +74,57 @@ function setup() {
 
   normal();
   hard();
+
+  // 音量を設定
+  let bgmVolume = 0.5; // BGMの音量
+
+  // BGMの音量を設定
+  bgm1.setVolume(bgmVolume);
+  bgm2.setVolume(bgmVolume);
+  bgm3.setVolume(bgmVolume);
+  bgm4.setVolume(bgmVolume);
+
+  // 効果音の音量を設定
+  sfx1.setVolume(3);
+  sfx2.setVolume(0.8);
+  sfx3.setVolume(0.3);
 }
 
-function normal () {
-  startButton = createButton('Normal Mode');
-  startButton.position(width / 2 - 50, height / 2 + 50);
-  startButton.size(100, 40);
+function normal() {
+  startButton = createButton('Normal');
+  startButton.position(width / 2 - 150, height / 2 + 100); // 位置調整
+  startButton.size(300, 120); // サイズを3倍に
   startButton.mousePressed(startGame);
 }
 
-function hard () {
-  hardModeButton = createButton('Hard Mode');
-  hardModeButton.position(width / 2 - 50, height / 2 + 100);
-  hardModeButton.size(100, 40);
+function hard() {
+  hardModeButton = createButton('Hard');
+  hardModeButton.position(width / 2 - 150, height / 2 + 250); // 位置調整
+  hardModeButton.size(300, 120); // サイズを3倍に
   hardModeButton.mousePressed(startGameHardMode);
-} 
+}
+
+
+function playBgm(bgm) {
+  // 既に再生中のBGMがあれば停止
+  if (currentBgm && currentBgm.isPlaying()) {
+    currentBgm.stop();
+  }
+  
+  // 新しいBGMを再生
+  bgm.loop();
+  currentBgm = bgm;
+}
+
+function playSfx(sfx) {
+  // 効果音を再生
+  sfx.play();
+
+  // 8秒後に効果音を停止
+  setTimeout(() => {
+    sfx.stop();
+  }, 2000);
+}
 
 function faceReady() {
   faceapi.detect(gotFaces);
@@ -156,11 +218,23 @@ function startGame() {
   timer = 30; // タイマーをリセット
   fireworks = []; // 花火をリセット
   startTimer(); // タイマーを開始
+  playSfx(sfx2);
+  sleep(500);
+  playBgm(bgm1);
 }
 
 function startGameHardMode() {
-  startGame();
-  // ハードモードの設定をここで追加できます
+  startButton.hide();
+  hardModeButton.hide();
+  titleVisible = false;
+  gameStarted = true;
+  timerActive = true;
+  gameOver = false;
+  timer = 30; // タイマーをリセット
+  fireworks = []; // 花火をリセット
+  startTimer(); // タイマーを開始
+  playSfx(sfx2);
+  playBgm(bgm3);
 }
 
 function startTimer() {
@@ -197,7 +271,7 @@ function resetGame() {
 
 
 function draw() {
-
+  // background(bgImage);
   if (titleVisible) {
     textSize(48);
     fill(255);
@@ -303,6 +377,7 @@ class Firework {
       let p = new Particle(this.firework.pos.x, this.firework.pos.y, false);
       this.particles.push(p);
     }
+    playSfx(sfx1);
   }
 
   show() {
