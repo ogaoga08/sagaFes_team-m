@@ -39,7 +39,9 @@ function preload() {
   sfx1 = loadSound('assets/sound/hanabi.mp3');
   sfx2 = loadSound('assets/sound/taiko.mp3');
   sfx3 = loadSound('assets/sound/wind.mp3');
+  sfx4 = loadSound('assets/sound/finish.mp3');
 
+  // 背景画像をロード
   bgImage = loadImage('assets/image/3e15740d46c803a1fdb012617692e8f4_t.jpeg');
 }
 
@@ -88,6 +90,7 @@ function setup() {
   sfx1.setVolume(3);
   sfx2.setVolume(0.8);
   sfx3.setVolume(0.3);
+  sfx4.setVolume(0.8);
 }
 
 function normal() {
@@ -215,12 +218,11 @@ function startGame() {
   gameStarted = true;
   timerActive = true;
   gameOver = false;
-  timer = 30; // タイマーをリセット
+  timer = 3; // タイマーをリセット
   fireworks = []; // 花火をリセット
   startTimer(); // タイマーを開始
-  playSfx(sfx2);
-  sleep(500);
   playBgm(bgm1);
+  playSfx(sfx2);
 }
 
 function startGameHardMode() {
@@ -233,8 +235,8 @@ function startGameHardMode() {
   timer = 30; // タイマーをリセット
   fireworks = []; // 花火をリセット
   startTimer(); // タイマーを開始
-  playSfx(sfx2);
   playBgm(bgm3);
+  playSfx(sfx2);
 }
 
 function startTimer() {
@@ -249,6 +251,7 @@ function startTimer() {
 }
 
 function endGame() {
+  playSfx(sfx4);
   gameStarted = false;
   timerActive = false;
   gameOver = true;
@@ -256,7 +259,11 @@ function endGame() {
   backButton = createButton('戻る');
   backButton.position(width / 2 - 50, height / 2 + 50);
   backButton.size(100, 40);
-  backButton.mousePressed(resetGame);
+  backButton.mousePressed(() => {
+    playSfx(sfx2);
+    resetGame();
+  }
+  )
 }
 
 function resetGame() {
@@ -267,6 +274,9 @@ function resetGame() {
   fireworks = []; // 花火リセット
   normal(); // Normalモードボタンを再表示
   hard(); // Hardモードボタンを再表示
+  if (currentBgm && currentBgm.isPlaying()) {
+    currentBgm.stop();
+  }
 }
 
 

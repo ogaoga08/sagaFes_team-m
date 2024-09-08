@@ -4,16 +4,14 @@ body {
 
 #canvas{
   position: relative;
-  top: 10px;
-  left: 0px;
   z-index:2;
 }
 
 #video{
   position: absolute;
-  top: 10px;
-  left: 10px;
-  z-index:3;
+  top: 0px;
+  left: 0px;
+  z-index:1;
 }
 
 button {
