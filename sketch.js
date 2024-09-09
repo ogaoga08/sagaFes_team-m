@@ -24,11 +24,28 @@ let fearfulG = 0;
 
 let shootingRate = 0.1;
 
+//絵文字-花火の玉として使用する画像
+let emojiRandom = 0;
+
 let bgm1, bgm2, bgm3, bgm4;
 let sfx1, sfx2, sfx3;
 let currentBgm;
 
+//雷
+let lightningBolt = [];
+let lightningTimer = 0;
+
 function preload() {
+  //画像を読み込む
+  chosenImage = loadImage("assets/image/surprised.png"); // 任意の画像のパス
+
+  sadImage = loadImage("assets/image/sad.png");
+  disgustedImage = loadImage("assets/image/disgusted.png");
+  angryImage = loadImage("assets/image/angry.png");
+  disgustedImage = loadImage("assets/image/disgusted.png");
+  fearImage = loadImage("assets/image/fear.png");
+  happyImage = loadImage("assets/image/happy.png");
+  surprisedImage = loadImage("assets/image/surprised.png");
   // BGMの音声ファイルをロード
   bgm1 = loadSound('assets/sound/stage1.mp3');
   bgm2 = loadSound('assets/sound/stage2.mp3');
@@ -45,12 +62,13 @@ function preload() {
   bgImage = loadImage('assets/image/3e15740d46c803a1fdb012617692e8f4_t.jpeg');
 }
 
-function sleep(waitMsec) {
-  var startMsec = new Date();
+// // 処理を一時停止する関数
+// function sleep(waitMsec) {
+//   var startMsec = new Date();
 
-  // 指定ミリ秒間だけループさせる（CPUは常にビジー状態）
-  while (new Date() - startMsec < waitMsec);
-}
+//   // 指定ミリ秒間だけループさせる（CPUは常にビジー状態）
+//   while (new Date() - startMsec < waitMsec);
+// }
 
 function setup() {
   canvas = createCanvas(windowWidth, windowHeight);
@@ -127,6 +145,84 @@ function playSfx(sfx) {
   setTimeout(() => {
     sfx.stop();
   }, 2000);
+}
+
+//雷の関数
+function createLightning() {
+  let startX = random(width); // 雷のスタート位置をランダムに設定
+  let startY = 0;
+  let bolt = [];
+  let currentX = startX;
+  let currentY = startY;
+
+  bolt.push([currentX, currentY]);
+  playSfx(sfx5);
+
+  // 雷が画面の下に到達するまで、ランダムなパターンで進む
+  while (currentY < height) {
+    let nextX = currentX + random(-20, 20); // 雷がランダムに左右にずれる
+    let nextY = currentY + random(10, 20);  // 下にランダムに進む
+
+    bolt.push([nextX, nextY]);
+    currentX = nextX;
+    currentY = nextY;
+  }
+
+  lightningBolt.push(bolt);
+}
+
+//雷の関数
+function createLightning() {
+  let startX = random(width); // 雷のスタート位置をランダムに設定
+  let startY = 0;
+  let bolt = [];
+  let currentX = startX;
+  let currentY = startY;
+
+  bolt.push([currentX, currentY]);
+  playSfx(sfx5);
+
+  // 雷が画面の下に到達するまで、ランダムなパターンで進む
+  while (currentY < height) {
+    let nextX = currentX + random(-20, 20); // 雷がランダムに左右にずれる
+    let nextY = currentY + random(10, 20);  // 下にランダムに進む
+
+    bolt.push([nextX, nextY]);
+    currentX = nextX;
+    currentY = nextY;
+  }
+
+  lightningBolt.push(bolt);
+}
+
+// 雷を描画する関数
+function doLightning(){
+  if (lightningTimer <= 0) {
+    createLightning();
+    lightningTimer = int(random(20, 60)); // 次の雷が発生するまでのランダムな間隔
+  }
+  lightningTimer--;
+  
+  // 雷の描画
+  for (let i = 0; i < lightningBolt.length; i++) {
+    drawLightning(lightningBolt[i]);
+  }
+  
+  // 5フレームごとに雷を消して新しい雷を生成
+  if (frameCount % 5 === 0) {
+    lightningBolt = [];
+  }
+}
+
+function drawLightning(bolt) {
+  stroke(60, 255, 255); // HSBで黄色
+  for (let i = 0; i < bolt.length - 1; i++) {
+    let x1 = bolt[i][0];
+    let y1 = bolt[i][1];
+    let x2 = bolt[i + 1][0];
+    let y2 = bolt[i + 1][1];
+    line(x1, y1, x2, y2); // 線を引いて雷を描画
+  }
 }
 
 function faceReady() {
@@ -348,7 +444,7 @@ class Firework {
           this.exploded = true;
           this.explode();
         } else if (angerG * 100 >= 0.90){ // angerの時、重力なし
-          shootingRate = 0.8;
+          shootingRate = 1;
           gravity = createVector(0, 0.0);
         } else if (sadG * 100 >= 0.90){ // sadの時、重力重め
           shootingRate = 0.07;
