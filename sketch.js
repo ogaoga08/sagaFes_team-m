@@ -60,7 +60,7 @@ function preload() {
   sfx5 = loadSound('assets/sound/kaminari.mp3');
 
   // 背景画像をロード
-  bgImage = loadImage('assets/image/3e15740d46c803a1fdb012617692e8f4_t.jpeg');
+  bgImage = loadImage('assets/image/26c7e1f160f76c671d2365446534ee91_t.jpeg');
 }
 
 // // 処理を一時停止する関数
@@ -218,7 +218,7 @@ function gotFaces(error, result) {
   
   drawBoxs(detections);
   drawLandmarks(detections);
-  drawExpressions(detections, 20, 250, 28);
+  drawExpressions(detections, 80, 250, 28);
   
   faceapi.detect(gotFaces);
 }
@@ -226,10 +226,10 @@ function drawBoxs(detections){
   if (detections.length > 0) {//If at least 1 face is detected: 
     for (f=0; f < detections.length; f++){
       let {_x, _y, _width, _height} = detections[f].alignedRect._box;
-      stroke(44, 169, 225);
+      stroke(44, 225, 225);
       strokeWeight(1);
       noFill();
-      rect(_x, _y, _width, _height);
+      rect(_x, _y -100, _width, _height + 200);
     }
   }
 }
@@ -241,7 +241,7 @@ function drawLandmarks(detections){
       for (let i = 0; i < points.length; i++) {
         stroke(44, 169, 225);
         strokeWeight(3);
-        point(points[i]._x, points[i]._y);
+        point(points[i]._x , points[i]._y * 1.6 - 280);
       }
     }
   }

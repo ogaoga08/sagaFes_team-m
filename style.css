@@ -1,17 +1,34 @@
 body {
   background-color: #000;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
 }
 
-#canvas{
-  position: relative;
-  z-index:1;
-}
-
-#video{
+#background {
   position: absolute;
-  top: 0px;
-  left: 0px;
-  z-index:0;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1; /* 背景が一番後ろ */
+}
+
+#video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: 0; /* ビデオが背景より前 */
+}
+
+#canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1; /* キャンバスが一番前 */
 }
 
 button {
