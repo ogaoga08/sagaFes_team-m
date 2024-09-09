@@ -57,6 +57,7 @@ function preload() {
   sfx2 = loadSound('assets/sound/taiko.mp3');
   sfx3 = loadSound('assets/sound/wind.mp3');
   sfx4 = loadSound('assets/sound/finish.mp3');
+  sfx5 = loadSound('assets/sound/kaminari.mp3');
 
   // 背景画像をロード
   bgImage = loadImage('assets/image/3e15740d46c803a1fdb012617692e8f4_t.jpeg');
@@ -145,30 +146,6 @@ function playSfx(sfx) {
   setTimeout(() => {
     sfx.stop();
   }, 2000);
-}
-
-//雷の関数
-function createLightning() {
-  let startX = random(width); // 雷のスタート位置をランダムに設定
-  let startY = 0;
-  let bolt = [];
-  let currentX = startX;
-  let currentY = startY;
-
-  bolt.push([currentX, currentY]);
-  playSfx(sfx5);
-
-  // 雷が画面の下に到達するまで、ランダムなパターンで進む
-  while (currentY < height) {
-    let nextX = currentX + random(-20, 20); // 雷がランダムに左右にずれる
-    let nextY = currentY + random(10, 20);  // 下にランダムに進む
-
-    bolt.push([nextX, nextY]);
-    currentX = nextX;
-    currentY = nextY;
-  }
-
-  lightningBolt.push(bolt);
 }
 
 //雷の関数
@@ -540,8 +517,23 @@ class Particle {
     } else {
       strokeWeight(4);
       stroke(this.hu, 255, 255);
+      //Firework (use image)
+      imageMode(CENTER);
+      emojiRandom = Math.floor( Math.random() * 7 );
+      if(emojiRandom == 0){
+        image(sadImage, this.pos.x, this.pos.y, 30, 30); // sad
+      }else if(emojiRandom == 1){
+        image(surprisedImage, this.pos.x, this.pos.y, 30, 30); // surprised
+      }else if(emojiRandom == 2){
+        image(fearImage, this.pos.x, this.pos.y, 30, 30); // fear
+      }else if(emojiRandom == 3){
+        image(disgustedImage, this.pos.x, this.pos.y, 30, 30); // disgusted
+      }else if(emojiRandom == 4){
+        image(angryImage, this.pos.x, this.pos.y, 30, 30); // angry
+      }else if(emojiRandom == 5){
+        image(happyImage, this.pos.x, this.pos.y, 30, 30); // happy
+      }
     }
-
     point(this.pos.x, this.pos.y);
   }
 }
