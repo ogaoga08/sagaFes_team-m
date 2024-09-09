@@ -423,6 +423,7 @@ class Firework {
         } else if (angerG * 100 >= 0.90){ // angerの時、重力なし
           shootingRate = 1;
           gravity = createVector(0, 0.0);
+          doLightning();
         } else if (sadG * 100 >= 0.90){ // sadの時、重力重め
           shootingRate = 0.07;
           gravity = createVector(0, 0.3);
@@ -438,6 +439,7 @@ class Firework {
           shootingRate = 2;
           this.exploded = true;
           this.explode();
+          doLightning();
         }else {
           shootingRate = 0.1;
           this.exploded = true; // 発射はするが、爆発しない
