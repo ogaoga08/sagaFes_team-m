@@ -35,6 +35,9 @@ let currentBgm;
 let lightningBolt = [];
 let lightningTimer = 0;
 
+// タイマー
+let explosionCount = 0;
+
 function preload() {
   //画像を読み込む
   chosenImage = loadImage("assets/image/surprised.png"); // 任意の画像のパス
@@ -382,14 +385,19 @@ function draw() {
       textSize(32);
       textAlign(RIGHT, TOP);
       text("Time: " + timer, width - 20, 20); // 画面右上にタイマー表示
+
+      // Display explosion count below the timer
+      text("Explosions: " + explosionCount, width - 20, 60);
     }
   }
 
   if (gameOver) {
-    textSize(48);
+    textSize(40);
     fill(255);
     textAlign(CENTER);
-    text("ゲーム終了！", width / 2, height / 2 - 100); // ゲーム終了テキスト表示
+    text("ゲーム終了！", width / 2, height / 2 - 100);
+    // ゲーム終了テキスト表示
+    text("スコア : " + explosionCount, width / 2, height / 2 - 30);
   }
 }
 
@@ -463,6 +471,7 @@ class Firework {
       this.particles.push(p);
     }
     playSfx(sfx1);
+    explosionCount++; // Increment explosion counter
   }
 
   show() {
