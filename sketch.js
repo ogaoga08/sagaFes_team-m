@@ -423,33 +423,33 @@ class Firework {
       //表情の値で条件分岐
       if (this.firework.vel.y >= 0) {
         if(neutralG * 100 >= 0.90){ // neutralの時、ふつう
-          shootingRate = 0.1;
+          shootingRate = 0.05;
         }else if (happyG * 100 >= 0.90) { // happyの時、花火盛大
-          shootingRate = 0.2;
+          shootingRate = 0.01;
           this.exploded = true;
           this.explode();
         } else if (angerG * 100 >= 0.90){ // angerの時、重力なし
-          shootingRate = 1;
+          shootingRate = 0.8;
           gravity = createVector(0, 0.0);
           doLightning();
         } else if (sadG * 100 >= 0.90){ // sadの時、重力重め
           shootingRate = 0.07;
           gravity = createVector(0, 0.3);
         } else if (disgustedG * 100 >= 0.90){ // disgustedの時、
-          shootingRate = 2;
+          shootingRate = 1;
           this.exploded = true;
           this.explode();
         } else if (surprisedG * 100 >= 0.90){ // surprisedの時、
-          shootingRate = 0.08;
+          shootingRate = 0.05;
           this.exploded = true;
           this.explode();
         } else if (fearfulG * 100 >= 0.90){ // fearfulの時、
-          shootingRate = 2;
+          shootingRate = 1;
           this.exploded = true;
           this.explode();
           doLightning();
         }else {
-          shootingRate = 0.1;
+          shootingRate = 0;
           this.exploded = true; // 発射はするが、爆発しない
         }
       }
@@ -492,7 +492,7 @@ class Particle {
     this.lifespan = 255;
 
     if (this.firework) {
-      this.vel = createVector(0, random(-19, -10));
+      this.vel = createVector(0, random(-17, -10));
     } else {
       this.vel = p5.Vector.random2D();
       this.vel.mult(random(2, 10));
