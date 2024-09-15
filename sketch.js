@@ -406,6 +406,10 @@ class Firework {
     this.firework = new Particle(random(width), height, true);
     this.exploded = false;
     this.particles = [];
+
+    // Select emoji type once for this firework
+    this.emojiType = Math.floor(Math.random() * 7); 
+    // Choose one emoji for the entire firework
   }
 
   done() {
@@ -413,6 +417,7 @@ class Firework {
   }
 
   update() {
+    
     if (!this.exploded) {
       this.firework.applyForce(gravity);
       this.firework.update();
@@ -458,6 +463,7 @@ class Firework {
     for (let i = this.particles.length - 1; i >= 0; i--) {
       this.particles[i].applyForce(gravity);
       this.particles[i].update();
+      // console.log(this.particles[i]);
 
       if (this.particles[i].done()) {
         this.particles.splice(i, 1);
@@ -479,8 +485,9 @@ class Firework {
       this.firework.show();
     }
 
+    // Show the particles and assign the pre-selected emoji for this firework
     for (let i = 0; i < this.particles.length; i++) {
-      this.particles[i].show();
+      this.particles[i].show(this.emojiType); // Pass emojiType to particles
     }
   }
 }
@@ -521,28 +528,39 @@ class Particle {
     return this.lifespan < 0;
   }
 
-  show() {
+  show(emojiType) { // Accept emojiType as a parameter
     if (!this.firework) {
       strokeWeight(2);
       stroke(this.hu, 255, 255, this.lifespan);
     } else {
       strokeWeight(4);
       stroke(this.hu, 255, 255);
-      //Firework (use image)
+      // Firework (use image)
       imageMode(CENTER);
-      emojiRandom = Math.floor( Math.random() * 7 );
-      if(emojiRandom == 0){
-        image(sadImage, this.pos.x, this.pos.y, 30, 30); // sad
-      }else if(emojiRandom == 1){
-        image(surprisedImage, this.pos.x, this.pos.y, 30, 30); // surprised
-      }else if(emojiRandom == 2){
-        image(fearImage, this.pos.x, this.pos.y, 30, 30); // fear
-      }else if(emojiRandom == 3){
-        image(disgustedImage, this.pos.x, this.pos.y, 30, 30); // disgusted
-      }else if(emojiRandom == 4){
-        image(angryImage, this.pos.x, this.pos.y, 30, 30); // angry
-      }else if(emojiRandom == 5){
-        image(happyImage, this.pos.x, this.pos.y, 30, 30); // happy
+      
+      // Use the pre-selected emoji for the firework
+      switch (emojiType) {
+        case 0:
+          image(sadImage, this.pos.x, this.pos.y, 30, 30);
+          break;
+        case 1:
+          image(surprisedImage, this.pos.x, this.pos.y, 30, 30);
+          break;
+        case 2:
+          image(fearImage, this.pos.x, this.pos.y, 30, 30);
+          break;
+        case 3:
+          image(disgustedImage, this.pos.x, this.pos.y, 30, 30);
+          break;
+        case 4:
+          image(angryImage, this.pos.x, this.pos.y, 30, 30);
+          break;
+        case 5:
+          image(happyImage, this.pos.x, this.pos.y, 30, 30);
+          break;
+        case 6:
+          image(surprisedImage, this.pos.x, this.pos.y, 30, 30);
+          break;
       }
     }
     point(this.pos.x, this.pos.y);
