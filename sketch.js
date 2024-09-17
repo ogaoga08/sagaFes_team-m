@@ -25,7 +25,7 @@ let disgustedG = 0;
 let surprisedG = 0;
 let fearfulG = 0;
 
-let shootingRate = 0.01; //5つの絵文字が等確率で出てくるから、1つの時より低めに
+let shootingRate = 0.005; //5つの絵文字が等確率で出てくるから、1つの時より低めに
 
 let bgm1, bgm2, bgm3, bgm4;
 let sfx1, sfx2, sfx3;
@@ -426,29 +426,6 @@ class Firework {
   done() {
     return this.exploded && this.particles.length === 0;
   }
-
-  update() { //このメソッドは表情ごとに用意した花火のクラスでオーバーライドされるから、中身なんでもいい
-    if (!this.exploded) {
-      this.firework.applyForce(gravity);
-      this.firework.update();
-    
-      if (this.firework.vel.y >= 0) {
-        if (happyG * 100 >= 0.90) { 
-          this.exploded = true;
-          this.explode();
-        }
-      }
-    }
-
-    for (let i = this.particles.length - 1; i >= 0; i--) {
-      this.particles[i].applyForce(gravity);
-      this.particles[i].update();
-
-      if (this.particles[i].done()) {
-        this.particles.splice(i, 1);
-      }
-    }
- }
 
   explode() {
     for (let i = 0; i < 100; i++) {
