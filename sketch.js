@@ -31,7 +31,6 @@ let bgm1, bgm2, bgm3, bgm4;
 let sfx1, sfx2, sfx3;
 let currentBgm;
 
-
 //雷
 let lightningBolt = [];
 let lightningTimer = 0;
@@ -43,13 +42,14 @@ function preload() {
   //画像を読み込む
   chosenImage = loadImage("assets/image/surprised.png"); // 任意の画像のパス
 
+  surprisedImage = loadImage("assets/image/surprised.png");
   sadImage = loadImage("assets/image/sad.png");
   disgustedImage = loadImage("assets/image/disgusted.png");
   angryImage = loadImage("assets/image/angry.png");
   disgustedImage = loadImage("assets/image/disgusted.png");
   fearImage = loadImage("assets/image/fear.png");
   happyImage = loadImage("assets/image/happy.png");
-  surprisedImage = loadImage("assets/image/surprised.png");
+
   // BGMの音声ファイルをロード
   bgm1 = loadSound('assets/sound/stage1.mp3');
   bgm2 = loadSound('assets/sound/stage2.mp3');
@@ -78,7 +78,7 @@ function preload() {
 function setup() {
   canvas = createCanvas(windowWidth, windowHeight);
   colorMode(HSB);
-  gravity = createVector(0, 0.3);
+  gravity = createVector(0, 0.3); //重力設定
   stroke(255);
   strokeWeight(4);
 
@@ -136,7 +136,6 @@ function playBgm(bgm) {
   if (currentBgm && currentBgm.isPlaying()) {
     currentBgm.stop();
   }
-  
   // 新しいBGMを再生
   bgm.loop();
   currentBgm = bgm;
@@ -145,8 +144,7 @@ function playBgm(bgm) {
 function playSfx(sfx) {
   // 効果音を再生
   sfx.play();
-
-  // 2秒後に効果音を停止
+  // 8秒後に効果音を停止
   setTimeout(() => {
     sfx.stop();
   }, 2000);
@@ -159,36 +157,31 @@ function createLightning() {
   let bolt = [];
   let currentX = startX;
   let currentY = startY;
-
   bolt.push([currentX, currentY]);
   playSfx(sfx5);
-
   // 雷が画面の下に到達するまで、ランダムなパターンで進む
   while (currentY < height) {
     let nextX = currentX + random(-20, 20); // 雷がランダムに左右にずれる
     let nextY = currentY + random(10, 20);  // 下にランダムに進む
-
     bolt.push([nextX, nextY]);
     currentX = nextX;
     currentY = nextY;
   }
-
   lightningBolt.push(bolt);
 }
 
-// 雷を描画する関数
+// 雷を描画する関数 -> 怒った時に確実に雷が出るようにlightningTimerを無効化しましたわ
 function doLightning(){
   if (lightningTimer <= 0) {
     createLightning();
-    lightningTimer = int(random(20, 60)); // 次の雷が発生するまでのランダムな間隔
+    //lightningTimer = int(random(20, 60)); // 次の雷が発生するまでのランダムな間隔
   }
-  lightningTimer--;
-  
+  //lightningTimer--;
+
   // 雷の描画
   for (let i = 0; i < lightningBolt.length; i++) {
     drawLightning(lightningBolt[i]);
   }
-  
   // 5フレームごとに雷を消して新しい雷を生成
   if (frameCount % 5 === 0) {
     lightningBolt = [];
@@ -296,7 +289,9 @@ function startGame() {
   timerActive = true;
   gameOver = false;
   timer = 20; // タイマーをリセット
-  fireworks = []; // 花火をリセット
+
+  allFireworks = [];// 花火をリセット
+
   startTimer(); // タイマーを開始
   playBgm(bgm1);
   playSfx(sfx2);
@@ -310,7 +305,9 @@ function startGameHardMode() {
   timerActive = true;
   gameOver = false;
   timer = 30; // タイマーをリセット
-  fireworks = []; // 花火をリセット
+
+  allFireworks = []; // 花火をリセット
+
   startTimer(); // タイマーを開始
   playBgm(bgm3);
   playSfx(sfx2);
@@ -348,7 +345,9 @@ function resetGame() {
   titleVisible = true;
   gameOver = false;
   gameStarted = false;
+
   allFireworks = [];// 花火リセット
+
   normal(); // Normalモードボタンを再表示
   hard(); // Hardモードボタンを再表示
   if (currentBgm && currentBgm.isPlaying()) {
@@ -364,7 +363,6 @@ function draw() {
     fill(255);
     textAlign(CENTER);
     text("花火ゲーム", width / 2, height / 2 - 50);
-    
   }
 
   if (gameStarted) {
@@ -400,10 +398,10 @@ function draw() {
       fill(255);
       textSize(32);
       textAlign(RIGHT, TOP);
-      text("Time: " + timer, width - 20, 20); // 画面右上にタイマー表示
+      text("残り時間: " + timer, width - 20, 20); // 画面右上にタイマー表示
 
       // Display explosion count below the timer
-      text("Explosions: " + explosionCount, width - 20, 60);
+      text("爆発した花火の数: " + explosionCount, width - 20, 60);
     }
   }
 
@@ -418,8 +416,8 @@ function draw() {
 }
 
 class Firework {
-  constructor() {
-    this.firework = new Particle(random(width), height, true);
+  constructor(emoji) {
+    this.firework = new Particle(random(width), height, true, emoji);
     this.exploded = false;
     this.particles = [];
     this.emoji = emoji;
@@ -445,13 +443,12 @@ class Firework {
     for (let i = this.particles.length - 1; i >= 0; i--) {
       this.particles[i].applyForce(gravity);
       this.particles[i].update();
-      // console.log(this.particles[i]);
 
       if (this.particles[i].done()) {
         this.particles.splice(i, 1);
       }
     }
-  }
+ }
 
   explode() {
     for (let i = 0; i < 100; i++) {
@@ -482,7 +479,7 @@ class Particle {
 
     if (this.firework) {
       //速度、スピード(打ち上がる高さ) 適正値はモニターの大きさ、設定した重力、減速の割合によって変化する
-      this.vel = createVector(0, random(-20, -10)); /////
+      this.vel = createVector(0, random(-20, -15)); /////
       /////////////////////////////////(上限,下限)///////
     } else {
       this.vel = p5.Vector.random2D();
