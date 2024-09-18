@@ -118,14 +118,14 @@ function setup() {
 
 function normal() {
   startButton = createButton('Normal');
-  startButton.position(width / 2 - 150, height / 2 + 100); // 位置調整
+  startButton.position(width / 2 - 150, height / 2 - height / 20); // 位置調整
   startButton.size(300, 120); // サイズを3倍に
   startButton.mousePressed(startGame);
 }
 
 function hard() {
   hardModeButton = createButton('Hard');
-  hardModeButton.position(width / 2 - 150, height / 2 + 250); // 位置調整
+  hardModeButton.position(width / 2 - 150, height / 2 + 120); // 位置調整
   hardModeButton.size(300, 120); // サイズを3倍に
   hardModeButton.mousePressed(startGameHardMode);
 }
@@ -270,14 +270,6 @@ function drawExpressions(detections, x, y, textYSpace){
     surprisedG = surprised;
     fearfulG = fearful;
     
-  } else { // If no faces are detected
-    text("neutral: ", x, y);
-    text("happiness: ", x, y + textYSpace);
-    text("anger: ", x, y + textYSpace * 2);
-    text("sad: ", x, y + textYSpace * 3);
-    text("disgusted: ", x, y + textYSpace * 4);
-    text("surprised: ", x, y + textYSpace * 5);
-    text("fear: ", x, y + textYSpace * 6);
   }
 }
 
@@ -289,6 +281,7 @@ function startGame() {
   timerActive = true;
   gameOver = false;
   timer = 20; // タイマーをリセット
+  shootingRate = 0.005;
 
   allFireworks = [];// 花火をリセット
 
@@ -305,6 +298,8 @@ function startGameHardMode() {
   timerActive = true;
   gameOver = false;
   timer = 30; // タイマーをリセット
+  shootingRate = 0.01;
+
 
   allFireworks = []; // 花火をリセット
 
@@ -362,7 +357,7 @@ function draw() {
     textSize(48);
     fill(255);
     textAlign(CENTER);
-    text("花火ゲーム", width / 2, height / 2 - 50);
+    text("花火ゲーム", width / 2, height / 3);
   }
 
   if (gameStarted) {
