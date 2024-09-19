@@ -244,15 +244,13 @@ function drawLandmarks(detections){
   }
 }
 
-function drawExpressions(detections, x, y, textYSpace){
-  if (detections.length > 0) { // If at least 1 face is detected
+function drawExpressions(detections, x, y, textYSpace) {
+  if (detections.length > 0) { // ゲームが開始されていないときのみ文字を表示
     let {neutral, happy, angry, sad, disgusted, surprised, fearful} = detections[0].expressions;
     textFont('Helvetica Neue');
     textSize(14);
-  
     noStroke();
     fill(0);
-
     text("neutral:       " + nf(neutral * 100, 2, 2) + "%", x, y);
     text("happiness: " + nf(happy * 100, 2, 2) + "%", x, y + textYSpace);
     text("anger:        " + nf(angry * 100, 2, 2) + "%", x, y + textYSpace * 2);
@@ -260,7 +258,6 @@ function drawExpressions(detections, x, y, textYSpace){
     text("disgusted: " + nf(disgusted * 100, 2, 2) + "%", x, y + textYSpace * 4);
     text("surprised:  " + nf(surprised * 100, 2, 2) + "%", x, y + textYSpace * 5);
     text("fear:           " + nf(fearful * 100, 2, 2) + "%", x, y + textYSpace * 6);
-
     // happiness~fearfulの値をグローバル変数に反映
     happyG = happy;
     neutralG = neutral;
@@ -269,7 +266,6 @@ function drawExpressions(detections, x, y, textYSpace){
     disgustedG = disgusted;
     surprisedG = surprised;
     fearfulG = fearful;
-    
   }
 }
 
@@ -390,13 +386,15 @@ function draw() {
     }
 
     if (timerActive) {
-      fill(255);
+      colorMode(RGB);
+      fill(192, 0, 0);
+      colorMode(HSB);
+      noStroke();
       textSize(32);
       textAlign(RIGHT, TOP);
-      text("残り時間: " + timer, width - 20, 20); // 画面右上にタイマー表示
-
+      text("Time: " + timer, width - 20, 20); // 画面右上にタイマー表示
       // Display explosion count below the timer
-      text("爆発した花火の数: " + explosionCount, width - 20, 60);
+      text("Explosions: " + explosionCount, width - 20, 60);
     }
   }
 
