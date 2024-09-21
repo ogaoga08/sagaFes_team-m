@@ -48,8 +48,6 @@ let explosionCount = 0;
 
 function preload() {
   //画像を読み込む
-  chosenImage = loadImage("assets/image/surprised.png"); // 任意の画像のパス
-
   surprisedImage = loadImage("assets/image/surprised.png");
   sadImage = loadImage("assets/image/sad.png");
   disgustedImage = loadImage("assets/image/disgusted.png");
