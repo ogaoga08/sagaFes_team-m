@@ -16,6 +16,14 @@ let timerActive = false; // タイマーがアクティブかどうか
 let gameOver = false; // ゲームが終了しているかどうか
 let timerInterval;
 
+//残り時間表示
+let timerLeftDisplay = false;
+
+//レベルアップ関連の変数
+let levelNum = 1;
+let showNumberAndLevels = false;  // レベルアップ時に追加秒数とレベルを表示するかどうか
+let displayTimer = 0; // 追加秒数を表示するフレーム数
+
 // 表情データ
 let neutralG = 0;
 let happyG = 0;
@@ -25,7 +33,7 @@ let disgustedG = 0;
 let surprisedG = 0;
 let fearfulG = 0;
 
-let shootingRate = 0.005; //5つの絵文字が等確率で出てくるから、1つの時より低めに
+let shootingRate = 0.01; //5つの絵文字が等確率で出てくるから、1つの時より低めに
 
 let bgm1, bgm2, bgm3, bgm4;
 let sfx1, sfx2, sfx3;
@@ -35,7 +43,7 @@ let currentBgm;
 let lightningBolt = [];
 let lightningTimer = 0;
 
-// タイマー
+// スコア、点数記録
 let explosionCount = 0;
 
 function preload() {
@@ -49,6 +57,7 @@ function preload() {
   disgustedImage = loadImage("assets/image/disgusted.png");
   fearImage = loadImage("assets/image/fear.png");
   happyImage = loadImage("assets/image/happy.png");
+  neutralImage = loadImage("assets/image/neutral.png");
 
   // BGMの音声ファイルをロード
   bgm1 = loadSound('assets/sound/stage1.mp3');
@@ -101,7 +110,7 @@ function setup() {
   hard();
 
   // 音量を設定
-  let bgmVolume = 0.5; // BGMの音量
+  let bgmVolume = 0.1; // BGMの音量(初期値:0.5)
 
   // BGMの音量を設定
   bgm1.setVolume(bgmVolume);
@@ -110,22 +119,24 @@ function setup() {
   bgm4.setVolume(bgmVolume);
 
   // 効果音の音量を設定
-  sfx1.setVolume(3);
-  sfx2.setVolume(0.8);
-  sfx3.setVolume(0.3);
-  sfx4.setVolume(0.8);
+  sfx1.setVolume(0.6); //(初期値:3)
+  sfx2.setVolume(0.2); //(初期値:0.8)
+  sfx3.setVolume(0.05); //(初期値:0.3)
+  sfx4.setVolume(0.2); //(初期値:0.8)
+  sfx5.setVolume(0.2);
+
 }
 
 function normal() {
   startButton = createButton('Normal');
-  startButton.position(width / 2 - 150, height / 2 - height / 20); // 位置調整
+  startButton.position(width / 2 - 150, height / 2 + 100); // 位置調整
   startButton.size(300, 120); // サイズを3倍に
   startButton.mousePressed(startGame);
 }
 
 function hard() {
   hardModeButton = createButton('Hard');
-  hardModeButton.position(width / 2 - 150, height / 2 + 120); // 位置調整
+  hardModeButton.position(width / 2 - 150, height / 2 + 250); // 位置調整
   hardModeButton.size(300, 120); // サイズを3倍に
   hardModeButton.mousePressed(startGameHardMode);
 }
@@ -144,7 +155,7 @@ function playBgm(bgm) {
 function playSfx(sfx) {
   // 効果音を再生
   sfx.play();
-  // 8秒後に効果音を停止
+  // 2秒後に効果音を停止
   setTimeout(() => {
     sfx.stop();
   }, 2000);
@@ -199,6 +210,11 @@ function drawLightning(bolt) {
   }
 }
 
+
+
+// 雨の関数
+
+
 function faceReady() {
   faceapi.detect(gotFaces);
 }
@@ -213,12 +229,16 @@ function gotFaces(error, result) {
 
   clear();
   
-  drawBoxs(detections);
-  drawLandmarks(detections);
-  drawExpressions(detections, 80, 250, 28);
+  if(!gameStarted){
+    drawBoxs(detections);
+    drawLandmarks(detections);
+  }
+  
+  drawExpressions(detections, 80, 250, 28); //表情の値をこの関数外でグローバル変数に格納できれば処理減らせられる
   
   faceapi.detect(gotFaces);
 }
+
 function drawBoxs(detections){
   if (detections.length > 0) {//If at least 1 face is detected: 
     for (f=0; f < detections.length; f++){
@@ -244,20 +264,10 @@ function drawLandmarks(detections){
   }
 }
 
-function drawExpressions(detections, x, y, textYSpace) {
-  if (detections.length > 0) { // ゲームが開始されていないときのみ文字を表示
+function drawExpressions(detections, x, y, textYSpace){
+  if (detections.length > 0) { // If at least 1 face is detected
     let {neutral, happy, angry, sad, disgusted, surprised, fearful} = detections[0].expressions;
-    textFont('Helvetica Neue');
-    textSize(14);
-    noStroke();
-    fill(0);
-    text("neutral:       " + nf(neutral * 100, 2, 2) + "%", x, y);
-    text("happiness: " + nf(happy * 100, 2, 2) + "%", x, y + textYSpace);
-    text("anger:        " + nf(angry * 100, 2, 2) + "%", x, y + textYSpace * 2);
-    text("sad:            " + nf(sad * 100, 2, 2) + "%", x, y + textYSpace * 3);
-    text("disgusted: " + nf(disgusted * 100, 2, 2) + "%", x, y + textYSpace * 4);
-    text("surprised:  " + nf(surprised * 100, 2, 2) + "%", x, y + textYSpace * 5);
-    text("fear:           " + nf(fearful * 100, 2, 2) + "%", x, y + textYSpace * 6);
+
     // happiness~fearfulの値をグローバル変数に反映
     happyG = happy;
     neutralG = neutral;
@@ -266,6 +276,23 @@ function drawExpressions(detections, x, y, textYSpace) {
     disgustedG = disgusted;
     surprisedG = surprised;
     fearfulG = fearful;
+
+    if(!gameStarted){
+      textFont('Helvetica Neue');
+      textSize(14);
+    
+      noStroke();
+      fill(0);
+
+      text("neutral:       " + nf(neutral * 100, 2, 2) + "%", x, y);
+      text("happiness: " + nf(happy * 100, 2, 2) + "%", x, y + textYSpace);
+      text("anger:        " + nf(angry * 100, 2, 2) + "%", x, y + textYSpace * 2);
+      text("sad:            " + nf(sad * 100, 2, 2) + "%", x, y + textYSpace * 3);
+      text("disgusted: " + nf(disgusted * 100, 2, 2) + "%", x, y + textYSpace * 4);
+      text("surprised:  " + nf(surprised * 100, 2, 2) + "%", x, y + textYSpace * 5);
+      text("fear:           " + nf(fearful * 100, 2, 2) + "%", x, y + textYSpace * 6);
+    }
+    
   }
 }
 
@@ -277,7 +304,7 @@ function startGame() {
   timerActive = true;
   gameOver = false;
   timer = 20; // タイマーをリセット
-  shootingRate = 0.005;
+  shootingRate = 0.0025;
 
   allFireworks = [];// 花火をリセット
 
@@ -296,13 +323,15 @@ function startGameHardMode() {
   timer = 30; // タイマーをリセット
   shootingRate = 0.01;
 
-
   allFireworks = []; // 花火をリセット
 
   startTimer(); // タイマーを開始
-  playBgm(bgm3);
   playSfx(sfx2);
+  playSfx(sfx3);//この後３秒くらい遅らせてつぎへ？
+  playBgm(bgm3);
 }
+
+
 
 function startTimer() {
   timerInterval = setInterval(() => {
@@ -338,6 +367,8 @@ function resetGame() {
   gameStarted = false;
 
   allFireworks = [];// 花火リセット
+  explosionCount = 0; // スコアリセット
+  levelNum = 1; // レベルリセット
 
   normal(); // Normalモードボタンを再表示
   hard(); // Hardモードボタンを再表示
@@ -345,8 +376,6 @@ function resetGame() {
     currentBgm.stop();
   }
 }
-
-
 function draw() {
   // background(bgImage);
   if (titleVisible) {
@@ -355,6 +384,8 @@ function draw() {
     textAlign(CENTER);
     text("花火ゲーム", width / 2, height / 3);
   }
+
+
 
   if (gameStarted) {
 
@@ -375,6 +406,9 @@ function draw() {
     if (random(1) < shootingRate) {
       allFireworks.push(new SurprisedFirework());
     }
+    if (random(1) < shootingRate) {
+      allFireworks.push(new NeutralFirework());
+    }
     
     for (let i = allFireworks.length - 1; i >= 0; i--) {
       allFireworks[i].update();
@@ -387,16 +421,71 @@ function draw() {
 
     if (timerActive) {
       colorMode(RGB);
-      fill(192, 0, 0);
+      fill(255,0,0);
       colorMode(HSB);
       noStroke();
       textSize(32);
       textAlign(RIGHT, TOP);
       text("Time: " + timer, width - 20, 20); // 画面右上にタイマー表示
+
       // Display explosion count below the timer
       text("Explosions: " + explosionCount, width - 20, 60);
+
+      //タイマーが5秒以下になったらカウントダウン開始
+      if(timer <= 5){
+        textSize(300);
+        fill(255);
+        textAlign(CENTER, CENTER);
+        text(timer, width / 2, height / 2);
+      }
     }
   }
+
+  //レベル１クリア -> タイマーを10秒追加してレベル２へ
+  if (levelNum == 1){
+    if(explosionCount >= 60){
+      timer += 10;
+      levelNum++;
+      showNumberAndLevels = true;
+      displayTimer = 100;
+    }
+  }
+  //レベル2クリア -> タイマーを10秒追加してレベル３へ
+  if (levelNum == 2){
+    if(explosionCount >= 100){
+      timer += 10;
+      levelNum++;
+      showNumberAndLevels = true;
+      displayTimer = 100;
+    }
+  }
+
+  //レベル3クリア -> タイマーを10秒追加してレベル4へ
+  if (levelNum == 3){
+    if(explosionCount >= 120){
+      timer += 10;
+      levelNum++;
+      showNumberAndLevels = true;
+      displayTimer = 100;
+      
+    }
+  }
+
+  //レベル4クリア -> タイマーを10秒追加してレベル5へ
+  if (levelNum == 4){
+    if(explosionCount >= 150){
+      timer += 15;
+      levelNum++;
+      showNumberAndLevels = true;
+      displayTimer = 100;
+    }
+  }
+
+  if(showNumberAndLevels){
+    showAddedTimeAndLevels();
+  }
+
+  
 
   if (gameOver) {
     textSize(40);
@@ -405,6 +494,21 @@ function draw() {
     text("ゲーム終了！", width / 2, height / 2 - 100);
     // ゲーム終了テキスト表示
     text("スコア : " + explosionCount, width / 2, height / 2 - 30);
+  }
+}
+
+function showAddedTimeAndLevels(){
+  textSize(100);      
+  fill(255);  
+  textAlign(CENTER, CENTER);  
+  text("+10秒", width / 2, height / 2 + 50); //レベルごとに異なる追加秒数を表示できるようにしたい
+
+  text("Level " + levelNum, width / 2, height / 2 - 100);
+
+  displayTimer--;
+
+  if(displayTimer <= 0){
+    showNumberAndLevels = false;
   }
 }
 
@@ -448,9 +552,9 @@ class Particle {
     this.emoji = emoji;
 
     if (this.firework) {
-      //速度、スピード(打ち上がる高さ) 適正値はモニターの大きさ、設定した重力、減速の割合によって変化する
-      this.vel = createVector(0, random(-20, -15)); /////
-      /////////////////////////////////(上限,下限)///////
+      //速度(打ち上がる高さ) 適正値はモニターの大きさ、設定した重力、減速の割合によって変化する
+      this.vel = createVector(0, random(-20, -10)); /////
+      /////////////////////////////////(上限,下限)////////
     } else {
       this.vel = p5.Vector.random2D();
       this.vel.mult(random(2, 10));
@@ -496,7 +600,7 @@ class Particle {
 
 //(´ε｀ )♥////(´ε｀ )♥///////(´ε｀ )♥/////////
 /////////////////////////////////////////////
-// ( ✹‿✹ ) 以下、表情ごとの花火のクラス ( ✹‿✹ ) //
+// ( ✹‿✹ ) 以下、表情ごとの花火のクラス ( ✹‿✹ )//
 /////////////////////////////////////////////
 
 // updateメソッドをいじって条件やエフェクトを追加・変更
@@ -512,9 +616,9 @@ class HappyFirework extends Firework {
       this.firework.applyForce(gravity);
       this.firework.update();
       
-      //ハッピー90%でばくはつ
+      //ハッピー95%でばくはつ
       if (this.firework.vel.y >= 0) {
-        if (happyG * 100 >= 0.90) { 
+        if (happyG * 100 >= 0.95) { 
           this.exploded = true;
           this.explode();
         }
@@ -552,11 +656,11 @@ class SadFirework extends Firework {
       this.firework.applyForce(gravity);
       this.firework.update();
       
-      //SAD90%でばくはつ
+      //SAD95%でばくはつ
       if (this.firework.vel.y >= 0) {
-        if (sadG * 100 >= 0.90) { 
+        if (sadG * 100 >= 0.95) { 
           this.exploded = true;
-          this.explode();
+          this.explode(); 
         }
       }
     }
@@ -594,7 +698,7 @@ class AngryFirework extends Firework {
       
       //Angry90%でばくはつ && かみなり発動
       if (this.firework.vel.y >= 0) {
-        if (angerG * 100 >= 0.90) { 
+        if (angerG * 100 >= 0.95) { 
           this.exploded = true;
           this.explode();
           doLightning(); // 雷を発生させる
@@ -635,7 +739,7 @@ class FearfulFirework extends Firework {
       
       //Fear 90%でばくはつ
       if (this.firework.vel.y >= 0) {
-        if (fearfulG * 100 >= 0.90) { 
+        if (fearfulG * 100 >= 0.95) { 
           this.exploded = true;
           this.explode();
         }
@@ -675,7 +779,47 @@ class SurprisedFirework extends Firework {
       
       //サプライズ90%でばくはつ
       if (this.firework.vel.y >= 0) {
-        if (surprisedG * 100 >= 0.90) { 
+        if (surprisedG * 100 >= 0.95) { 
+          this.exploded = true;
+          this.explode();
+        }
+      }
+    }
+
+    for (let i = this.particles.length - 1; i >= 0; i--) {
+      this.particles[i].applyForce(gravity);
+      this.particles[i].update();
+
+      if (this.particles[i].done()) {
+        this.particles.splice(i, 1);
+      }
+    }
+ }
+
+  show() {
+    if (!this.exploded) {
+      this.firework.show();
+    }
+    for (let i = 0; i < this.particles.length; i++) {
+      this.particles[i].show();
+    }
+  }
+}
+
+class NeutralFirework extends Firework {
+  constructor(){
+    let emoji = neutralImage;
+    super(emoji);
+  }
+
+  update() {
+    if (!this.exploded) {
+      this.firework.applyForce(gravity);
+      this.firework.update();
+      
+      //真顔95%でばくはつ
+      if (this.firework.vel.y >= 0) {
+        if (neutralG * 100 >= 0.95) { 
           this.exploded = true;
           this.explode();
         }
