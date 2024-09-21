@@ -47,7 +47,9 @@ let lightningTimer = 0;
 let explosionCount = 0;
 
 // テキスト
-let title;
+let titleDiv;
+let endDiv;
+let scoreDiv;
 
 function preload() {
   //画像を読み込む
@@ -118,23 +120,33 @@ function setup() {
   sfx4.setVolume(0.2); //(初期値:0.8)
   sfx5.setVolume(0.2);
 
-  playBgm(bgm4);
+  // アニメーション定義をスタイルタグに追加
+  let styleElement = createElement('style', `
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-30px); }
+    }
+  `);
+  styleElement.parent(document.head);
 }
 
 function normal() {
   startButton = createButton('のーまる');
-  startButton.style('Noto Serif JP');
-  startButton.position(width / 2 - 150, height / 2 - height / 20); // 位置調整
-  startButton.size(300, 120); // サイズを3倍に
+  startButton.style('font-family', 'Noto Serif JP'); // フォントファミリーを指定
+  startButton.style('font-size', '26px'); // テキストのサイズを指定
+  startButton.position(width / 2 - 150, height / 2 - height / 40); // 位置調整
+  startButton.size(300, 120); // ボタンサイズはそのまま
   startButton.mousePressed(startGame);
 }
+
 function hard() {
-  hardModeButton = createButton('Hard');
-  hardModeButton.position(width / 2 - 150, height / 2 + 120); // 位置調整
-  hardModeButton.size(300, 120); // サイズを3倍に
+  hardModeButton = createButton('はーど');
+  hardModeButton.style('font-family', 'Noto Serif JP'); // フォントファミリーを指定
+  hardModeButton.style('font-size', '26px'); // テキストのサイズを指定
+  hardModeButton.position(width / 2 - 150, height / 2 + 140); // 位置調整
+  hardModeButton.size(300, 120); // ボタンサイズはそのまま
   hardModeButton.mousePressed(startGameHardMode);
 }
-
 
 function playBgm(bgm) {
   // 既に再生中のBGMがあれば停止
@@ -345,7 +357,33 @@ function endGame() {
   timerActive = false;
   gameOver = true;
   clearInterval(timerInterval); // タイマーを停止
+
+   // タイムアップのテキスト
+  endDiv = createDiv('たいむあっぷ！');
+  endDiv.position(width / 2 - 150, height / 2 - 100);  // 位置を中央に
+  endDiv.style('font-size', '56px');
+  endDiv.style('color', 'white');
+  endDiv.style('text-align', 'center');
+  endDiv.style('font-family', 'Noto Serif JP');
+  endDiv.style('width', '350px');
+  endDiv.style('text-shadow', '4px 4px 8px rgba(50, 0, 0, 0.1)');
+  endDiv.style('animation', 'bounce 2s infinite');  // アニメーション追加
+
+  // スコアのテキスト
+  scoreDiv = createDiv('スコア: ' + explosionCount);
+  scoreDiv.position(width / 2 - 120, height / 2 + 20);  // 位置を中央に
+  scoreDiv.style('font-size', '32px');
+  scoreDiv.style('color', 'white');
+  scoreDiv.style('text-align', 'center');
+  scoreDiv.style('font-family', 'Noto Serif JP');
+  scoreDiv.style('width', '400px');
+  scoreDiv.style('text-shadow', '4px 4px 8px rgba(50, 0, 0, 0.1)');
+  scoreDiv.style('animation', 'bounce 2s infinite');  // アニメーション追加
+
+
   backButton = createButton('戻る');
+  backButton.style('font-family', 'Noto Serif JP'); // フォントファミリーを指定
+  backButton.style('font-size', '26px'); // テキストのサイズを指定
   backButton.position(width / 2 - 50, height / 2 + 50);
   backButton.size(100, 40);
   backButton.mousePressed(() => {
@@ -357,6 +395,15 @@ function endGame() {
 
 function resetGame() {
   backButton.hide();
+
+  // タイムアップとスコアのテキストを削除
+  if (endDiv) {
+    endDiv.remove();
+  }
+  if (scoreDiv) {
+    scoreDiv.remove();
+  }
+
   titleVisible = true;
   gameOver = false;
   gameStarted = false;
@@ -373,22 +420,29 @@ function resetGame() {
   playBgm(bgm4);
 }
 function draw() {
-  // background(bgImage);
-  if (titleVisible) {
+  if (titleVisible && !titleDiv) {
     // HTMLのdivを作成してタイトルを表示
-    title = createDiv('花火げゑむ');
-    title.position(width / 2 - 150, height / 3);  // 位置調整
-    title.style('font-size', '56px');  // テキストサイズを指定
-    title.style('color', 'white');  // テキストの色を指定
-    title.style('text-align', 'center');  // 中央揃え
-    title.style('Noto Serif JP'); // フォントを設定
-    title.style('width', '300px');  // テキストの幅を指定
+    titleDiv = createDiv('花火げゑむ');
+    titleDiv.position(width / 2 - 150, height / 3);  // 位置調整
+    titleDiv.style('font-size', '56px');  // テキストサイズを指定
+    titleDiv.style('color', 'white');  // テキストの色を指定
+    titleDiv.style('text-align', 'center');  // 中央揃え
+    titleDiv.style('Noto Serif JP'); // フォントを設定
+    titleDiv.style('width', '300px');  // テキストの幅を指定
+    titleDiv.style('text-shadow', '4px 4px 8px rgba(0, 0, 0, 0.1)');  // シャドウエフェクトを適用
+    titleDiv.style('animation', 'bounce 2s infinite');  // アニメーションを適用
+
+    playBgm(bgm4);
   }
 
 
 
   if (gameStarted) {
-
+    // タイトルを非表示にして削除
+    if (titleDiv) {
+      titleDiv.remove();
+      titleDiv = null;
+    }
     //各表情ごとの花火のクラスを生成し、全て allFireworks 配列に格納
     //5つの絵文字が等確率で発射されるから、shootingRateは低めに
     if (random(1) < shootingRate) {
@@ -426,10 +480,10 @@ function draw() {
       noStroke();
       textSize(32);
       textAlign(RIGHT, TOP);
-      text("Time: " + timer, width - 20, 20); // 画面右上にタイマー表示
+      text("残り時間: " + timer, width - 20, 20); // 画面右上にタイマー表示
 
       // Display explosion count below the timer
-      text("Explosions: " + explosionCount, width - 20, 60);
+      text("爆発した花火の数: " + explosionCount, width - 20, 60);
 
       //タイマーが5秒以下になったらカウントダウン開始
       if(timer <= 5){
@@ -483,15 +537,6 @@ function draw() {
 
   if(showNumberAndLevels){
     showAddedTimeAndLevels();
-  }
-  
-  if (gameOver) {
-    textSize(40);
-    fill(255);
-    textAlign(CENTER);
-    text("ゲーム終了！", width / 2, height / 2 - 100);
-    // ゲーム終了テキスト表示
-    text("スコア : " + explosionCount, width / 2, height / 2 - 30);
   }
 }
 
