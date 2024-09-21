@@ -116,7 +116,7 @@ function setup() {
   bgm1.setVolume(bgmVolume);
   bgm2.setVolume(bgmVolume);
   bgm3.setVolume(bgmVolume);
-  bgm4.setVolume(bgmVolume);
+  bgm4.setVolume(0.05);
 
   // 効果音の音量を設定
   sfx1.setVolume(0.6); //(初期値:3)
@@ -125,18 +125,18 @@ function setup() {
   sfx4.setVolume(0.2); //(初期値:0.8)
   sfx5.setVolume(0.2);
 
+  playBgm(bgm4);
 }
 
 function normal() {
   startButton = createButton('Normal');
-  startButton.position(width / 2 - 150, height / 2 + 100); // 位置調整
+  startButton.position(width / 2 - 150, height / 2 - height / 20); // 位置調整
   startButton.size(300, 120); // サイズを3倍に
   startButton.mousePressed(startGame);
 }
-
 function hard() {
   hardModeButton = createButton('Hard');
-  hardModeButton.position(width / 2 - 150, height / 2 + 250); // 位置調整
+  hardModeButton.position(width / 2 - 150, height / 2 + 120); // 位置調整
   hardModeButton.size(300, 120); // サイズを3倍に
   hardModeButton.mousePressed(startGameHardMode);
 }
@@ -375,6 +375,7 @@ function resetGame() {
   if (currentBgm && currentBgm.isPlaying()) {
     currentBgm.stop();
   }
+  playBgm(bgm4);
 }
 function draw() {
   // background(bgImage);
@@ -553,7 +554,7 @@ class Particle {
 
     if (this.firework) {
       //速度(打ち上がる高さ) 適正値はモニターの大きさ、設定した重力、減速の割合によって変化する
-      this.vel = createVector(0, random(-20, -10)); /////
+      this.vel = createVector(0, random(-19, -15)); /////
       /////////////////////////////////(上限,下限)////////
     } else {
       this.vel = p5.Vector.random2D();
