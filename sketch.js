@@ -46,6 +46,9 @@ let lightningTimer = 0;
 // スコア、点数記録
 let explosionCount = 0;
 
+// テキスト
+let title;
+
 function preload() {
   //画像を読み込む
   surprisedImage = loadImage("assets/image/surprised.png");
@@ -80,9 +83,6 @@ function setup() {
   gravity = createVector(0, 0.3); //重力設定
   stroke(255);
   strokeWeight(4);
-
-  let txt = createDiv('これはHTMLの文字列');
-    txt.position(20, 20);
 
   canvas.id("canvas");
 
@@ -122,7 +122,8 @@ function setup() {
 }
 
 function normal() {
-  startButton = createButton('Normal');
+  startButton = createButton('のーまる');
+  startButton.style('Noto Serif JP');
   startButton.position(width / 2 - 150, height / 2 - height / 20); // 位置調整
   startButton.size(300, 120); // サイズを3倍に
   startButton.mousePressed(startGame);
@@ -145,13 +146,21 @@ function playBgm(bgm) {
   currentBgm = bgm;
 }
 
-function playSfx(sfx) {
+function playSfx(sfx1) {
   // 効果音を再生
-  sfx.play();
+  sfx1.play();
   // 2秒後に効果音を停止
   setTimeout(() => {
-    sfx.stop();
+    sfx1.stop();
   }, 2000);
+}
+function playSfx(sfx3) {
+  // 効果音を再生
+  sfx3.play();
+  // 8秒後に効果音を停止
+  setTimeout(() => {
+    sfx3.stop();
+  }, 8000);
 }
 
 //雷の関数
@@ -202,11 +211,6 @@ function drawLightning(bolt) {
     line(x1, y1, x2, y2); // 線を引いて雷を描画
   }
 }
-
-
-
-// 雨の関数
-
 
 function faceReady() {
   faceapi.detect(gotFaces);
@@ -324,8 +328,6 @@ function startGameHardMode() {
   playBgm(bgm3);
 }
 
-
-
 function startTimer() {
   timerInterval = setInterval(() => {
     if (timer > 0) {
@@ -373,10 +375,14 @@ function resetGame() {
 function draw() {
   // background(bgImage);
   if (titleVisible) {
-    textSize(48);
-    fill(255);
-    textAlign(CENTER);
-    text("花火ゲーム", width / 2, height / 3);
+    // HTMLのdivを作成してタイトルを表示
+    title = createDiv('花火げゑむ');
+    title.position(width / 2 - 150, height / 3);  // 位置調整
+    title.style('font-size', '56px');  // テキストサイズを指定
+    title.style('color', 'white');  // テキストの色を指定
+    title.style('text-align', 'center');  // 中央揃え
+    title.style('Noto Serif JP'); // フォントを設定
+    title.style('width', '300px');  // テキストの幅を指定
   }
 
 
@@ -478,9 +484,7 @@ function draw() {
   if(showNumberAndLevels){
     showAddedTimeAndLevels();
   }
-
   
-
   if (gameOver) {
     textSize(40);
     fill(255);
