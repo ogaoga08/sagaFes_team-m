@@ -135,7 +135,7 @@ function normal() {
   startButton.style('font-family', 'Noto Serif JP'); // フォントファミリーを指定
   startButton.style('font-size', '26px'); // テキストのサイズを指定
   startButton.position(width / 2 - 150, height / 2 - height / 40); // 位置調整
-  startButton.size(300, 120); // ボタンサイズはそのまま
+  startButton.size(300, 120);
   startButton.mousePressed(startGame);
 }
 
@@ -144,7 +144,7 @@ function hard() {
   hardModeButton.style('font-family', 'Noto Serif JP'); // フォントファミリーを指定
   hardModeButton.style('font-size', '26px'); // テキストのサイズを指定
   hardModeButton.position(width / 2 - 150, height / 2 + 140); // 位置調整
-  hardModeButton.size(300, 120); // ボタンサイズはそのまま
+  hardModeButton.size(300, 120);
   hardModeButton.mousePressed(startGameHardMode);
 }
 
@@ -360,23 +360,23 @@ function endGame() {
 
    // タイムアップのテキスト
   endDiv = createDiv('たいむあっぷ！');
-  endDiv.position(width / 2 - 150, height / 2 - 100);  // 位置を中央に
+  endDiv.position(width / 2 - 180, height / 3);  // 位置を中央に
   endDiv.style('font-size', '56px');
   endDiv.style('color', 'white');
   endDiv.style('text-align', 'center');
   endDiv.style('font-family', 'Noto Serif JP');
-  endDiv.style('width', '350px');
+  endDiv.style('width', '400px');
   endDiv.style('text-shadow', '4px 4px 8px rgba(50, 0, 0, 0.1)');
   endDiv.style('animation', 'bounce 2s infinite');  // アニメーション追加
 
   // スコアのテキスト
   scoreDiv = createDiv('スコア: ' + explosionCount);
-  scoreDiv.position(width / 2 - 120, height / 2 + 20);  // 位置を中央に
+  scoreDiv.position(width / 2 - 200, height / 2 - height / 40);  // 位置を中央に
   scoreDiv.style('font-size', '32px');
   scoreDiv.style('color', 'white');
   scoreDiv.style('text-align', 'center');
   scoreDiv.style('font-family', 'Noto Serif JP');
-  scoreDiv.style('width', '400px');
+  scoreDiv.style('width', '600px');
   scoreDiv.style('text-shadow', '4px 4px 8px rgba(50, 0, 0, 0.1)');
   scoreDiv.style('animation', 'bounce 2s infinite');  // アニメーション追加
 
@@ -384,8 +384,8 @@ function endGame() {
   backButton = createButton('戻る');
   backButton.style('font-family', 'Noto Serif JP'); // フォントファミリーを指定
   backButton.style('font-size', '26px'); // テキストのサイズを指定
-  backButton.position(width / 2 - 50, height / 2 + 50);
-  backButton.size(100, 40);
+  backButton.position(width / 2 - 150, height / 2 + 140); // 位置調整
+  backButton.size(300, 120);
   backButton.mousePressed(() => {
     playSfx(sfx2);
     resetGame();
