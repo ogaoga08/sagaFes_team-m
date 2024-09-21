@@ -74,20 +74,15 @@ function preload() {
   bgImage = loadImage('assets/image/26c7e1f160f76c671d2365446534ee91_t.jpeg');
 }
 
-// // 処理を一時停止する関数
-// function sleep(waitMsec) {
-//   var startMsec = new Date();
-
-//   // 指定ミリ秒間だけループさせる（CPUは常にビジー状態）
-//   while (new Date() - startMsec < waitMsec);
-// }
-
 function setup() {
   canvas = createCanvas(windowWidth, windowHeight);
   colorMode(HSB);
   gravity = createVector(0, 0.3); //重力設定
   stroke(255);
   strokeWeight(4);
+
+  let txt = createDiv('これはHTMLの文字列');
+    txt.position(20, 20);
 
   canvas.id("canvas");
 
@@ -229,7 +224,7 @@ function gotFaces(error, result) {
   
   if(!gameStarted){
     drawBoxs(detections);
-    drawLandmarks(detections);
+    // drawLandmarks(detections);
   }
   
   drawExpressions(detections, 80, 250, 28); //表情の値をこの関数外でグローバル変数に格納できれば処理減らせられる
