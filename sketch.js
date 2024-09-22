@@ -399,6 +399,11 @@ function endGame() {
     resetGame();
   }
   )
+  // カウントダウンのテキストを削除
+  if (lastCountDiv) {
+    lastCountDiv.remove();
+    lastCountDiv = null;
+  }
 }
 
 function resetGame() {
@@ -538,7 +543,7 @@ function draw() {
         } else {
           lastCountDiv.html(timer);
         }
-      } else {
+      } else if (timer < 1) {
         if (lastCountDiv) {
           lastCountDiv.remove();
           lastCountDiv = null;
@@ -550,10 +555,10 @@ function draw() {
   //レベル１クリア -> タイマーを10秒追加してレベル２へ
   if (levelNum == 1){
     if(explosionCount >= 60){
-      timer += 10;
+      timer += 5;
       levelNum++;
       showNumberAndLevels = true;
-      displayTimer = 100;
+      displayTimer = 50;
     }
   }
   //レベル2クリア -> タイマーを10秒追加してレベル３へ
@@ -569,10 +574,10 @@ function draw() {
   //レベル3クリア -> タイマーを10秒追加してレベル4へ
   if (levelNum == 3){
     if(explosionCount >= 120){
-      timer += 10;
+      timer += 5;
       levelNum++;
       showNumberAndLevels = true;
-      displayTimer = 100;
+      displayTimer = 50;
       
     }
   }
@@ -580,10 +585,10 @@ function draw() {
   //レベル4クリア -> タイマーを10秒追加してレベル5へ
   if (levelNum == 4){
     if(explosionCount >= 150){
-      timer += 15;
+      timer += 5;
       levelNum++;
       showNumberAndLevels = true;
-      displayTimer = 100;
+      displayTimer = 50;
     }
   }
 
@@ -596,9 +601,9 @@ function showAddedTimeAndLevels(){
   textSize(100);      
   fill(255);  
   textAlign(CENTER, CENTER);  
-  text("+10秒", width / 2, height / 2 + 50); //レベルごとに異なる追加秒数を表示できるようにしたい
+  text("+5秒", width / 2, height / 2 + 50); //レベルごとに異なる追加秒数を表示できるようにしたい
 
-  text("Level " + levelNum, width / 2, height / 2 - 100);
+  text("れべる " + levelNum, width / 2, height / 2 - 100);
 
   displayTimer--;
 
