@@ -50,6 +50,9 @@ let explosionCount = 0;
 let titleDiv;
 let endDiv;
 let scoreDiv;
+let countdownDiv;
+let scoreCountDiv;
+let lastCountDiv;
 
 function preload() {
   //画像を読み込む
@@ -125,6 +128,11 @@ function setup() {
     @keyframes bounce {
       0%, 100% { transform: translateY(0); }
       50% { transform: translateY(-30px); }
+    }
+    @keyframes scaleUp {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.5); }
+      100% { transform: scale(1); }
     }
   `);
   styleElement.parent(document.head);
@@ -358,7 +366,7 @@ function endGame() {
   gameOver = true;
   clearInterval(timerInterval); // タイマーを停止
 
-   // タイムアップのテキスト
+  // タイムアップのテキスト
   endDiv = createDiv('たいむあっぷ！');
   endDiv.position(width / 2 - 180, height / 3);  // 位置を中央に
   endDiv.style('font-size', '56px');
@@ -366,18 +374,18 @@ function endGame() {
   endDiv.style('text-align', 'center');
   endDiv.style('font-family', 'Noto Serif JP');
   endDiv.style('width', '400px');
-  endDiv.style('text-shadow', '4px 4px 8px rgba(50, 0, 0, 0.1)');
+  endDiv.style('text-shadow', '4px 4px 8px rgba(200, 0, 0, 0.7)');
   endDiv.style('animation', 'bounce 2s infinite');  // アニメーション追加
 
   // スコアのテキスト
   scoreDiv = createDiv('スコア: ' + explosionCount);
-  scoreDiv.position(width / 2 - 200, height / 2 - height / 40);  // 位置を中央に
+  scoreDiv.position(width / 3, height / 2 - height / 40);  // 位置を中央に
   scoreDiv.style('font-size', '32px');
   scoreDiv.style('color', 'white');
   scoreDiv.style('text-align', 'center');
   scoreDiv.style('font-family', 'Noto Serif JP');
   scoreDiv.style('width', '600px');
-  scoreDiv.style('text-shadow', '4px 4px 8px rgba(50, 0, 0, 0.1)');
+  scoreDiv.style('text-shadow', '4px 4px 8px rgba(200, 0, 0, 0.7)');
   scoreDiv.style('animation', 'bounce 2s infinite');  // アニメーション追加
 
 
@@ -402,6 +410,19 @@ function resetGame() {
   }
   if (scoreDiv) {
     scoreDiv.remove();
+  }
+  // 残り時間と爆発した花火の数のテキストを削除
+  if (countdownDiv) {
+    countdownDiv.remove();
+    countdownDiv = null;
+  }
+  if (scoreCountDiv) {
+    scoreCountDiv.remove();
+    scoreCountDiv = null;
+  }
+  if (lastCountDiv) {
+    lastCountDiv.remove();
+    lastCountDiv = null;
   }
 
   titleVisible = true;
@@ -429,7 +450,7 @@ function draw() {
     titleDiv.style('text-align', 'center');  // 中央揃え
     titleDiv.style('Noto Serif JP'); // フォントを設定
     titleDiv.style('width', '300px');  // テキストの幅を指定
-    titleDiv.style('text-shadow', '4px 4px 8px rgba(0, 0, 0, 0.1)');  // シャドウエフェクトを適用
+    titleDiv.style('text-shadow', '4px 4px 8px rgba(200, 0, 0, 0.7)');  // シャドウエフェクトを適用
     titleDiv.style('animation', 'bounce 2s infinite');  // アニメーションを適用
 
     playBgm(bgm4);
@@ -474,23 +495,54 @@ function draw() {
     }
 
     if (timerActive) {
-      colorMode(RGB);
-      fill(255,0,0);
-      colorMode(HSB);
-      noStroke();
-      textSize(32);
-      textAlign(RIGHT, TOP);
-      text("残り時間: " + timer, width - 20, 20); // 画面右上にタイマー表示
+      if (!countdownDiv) {
+        countdownDiv = createDiv('残り時間: ' + timer);
+        countdownDiv.position(width - 420, 20);  // 位置調整
+        countdownDiv.style('font-size', '32px');  // テキストサイズを指定
+        countdownDiv.style('color', 'white');  // テキストの色を指定
+        countdownDiv.style('text-align', 'right');  // 右揃え
+        countdownDiv.style('font-family', 'Noto Serif JP'); // フォントを設定
+        countdownDiv.style('width', '400px');  // テキストの幅を指定
+        countdownDiv.style('text-shadow', '2px 2px 4px rgba(200, 0, 0, 0.7)');  // シャドウエフェクトを適用
+      } else {
+        countdownDiv.html('残り時間: ' + timer);
+      }
 
-      // Display explosion count below the timer
-      text("爆発した花火の数: " + explosionCount, width - 20, 60);
+      if (!scoreCountDiv) {
+        scoreCountDiv = createDiv('爆発した花火の数: ' + explosionCount);
+        scoreCountDiv.position(width - 420, 60);  // 位置調整
+        scoreCountDiv.style('font-size', '32px');  // テキストサイズを指定
+        scoreCountDiv.style('color', 'white');  // テキストの色を指定
+        scoreCountDiv.style('text-align', 'right');  // 右揃え
+        scoreCountDiv.style('font-family', 'Noto Serif JP'); // フォントを設定
+        scoreCountDiv.style('width', '400px');  // テキストの幅を指定
+        scoreCountDiv.style('text-shadow', '2px 2px 4px rgba(200, 0, 0, 0.7)');  // シャドウエフェクトを適用
+      } else {
+        scoreCountDiv.html('爆発した花火の数: ' + explosionCount);
+      }
+    }
 
       //タイマーが5秒以下になったらカウントダウン開始
-      if(timer <= 5){
-        textSize(300);
-        fill(255);
-        textAlign(CENTER, CENTER);
-        text(timer, width / 2, height / 2);
+      if (timer <= 5) {
+        if (!lastCountDiv) {
+          lastCountDiv = createDiv(timer);
+          lastCountDiv.position(width / 2 - 150, height / 2 - 150); // 位置調整
+          lastCountDiv.style('font-size', '300px'); // 初期サイズ
+          lastCountDiv.style('color', 'white'); // テキストの色を指定
+          lastCountDiv.style('text-align', 'center'); // 中央揃え
+          lastCountDiv.style('font-family', 'Noto Serif JP'); // フォントを設定
+          lastCountDiv.style('width', '300px'); // テキストの幅を指定
+          lastCountDiv.style('height', '300px'); // テキストの高さを指定
+          lastCountDiv.style('line-height', '300px'); // テキストの行の高さを指定
+          lastCountDiv.style('animation', 'scaleUp 1s infinite'); // アニメーションを適用
+        } else {
+          lastCountDiv.html(timer);
+        }
+      } else {
+        if (lastCountDiv) {
+          lastCountDiv.remove();
+          lastCountDiv = null;
+        }
       }
     }
   }
@@ -538,7 +590,7 @@ function draw() {
   if(showNumberAndLevels){
     showAddedTimeAndLevels();
   }
-}
+
 
 function showAddedTimeAndLevels(){
   textSize(100);      
