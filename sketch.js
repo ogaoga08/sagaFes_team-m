@@ -350,14 +350,18 @@ function startGameHardMode() {
 
 function startTimer() {
   timerInterval = setInterval(() => {
-    if (timer > 0) {
-      timer--;
+    if (timer === 1) { 
+      timer--; // タイマーを0にする
+      countdownDiv.html('残り時間: ' + timer); // 残り時間を0に更新
+      clearInterval(timerInterval); // タイマーを停止
+      endGame(); // ゲーム終了
     } else {
-      clearInterval(timerInterval);
-      endGame();
+      timer--;
     }
   }, 1000);
 }
+
+
 
 function endGame() {
   playSfx(sfx4);
