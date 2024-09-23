@@ -36,7 +36,6 @@ let fearfulG = 0;
 let shootingRate = 0.01; //5つの絵文字が等確率で出てくるから、1つの時より低めに
 
 let bgm1, bgm2, bgm3, bgm4;
-let sfx1, sfx2, sfx3;
 let currentBgm;
 
 //雷
@@ -77,6 +76,7 @@ function preload() {
   sfx3 = loadSound('assets/sound/wind.mp3');
   sfx4 = loadSound('assets/sound/finish.mp3');
   sfx5 = loadSound('assets/sound/kaminari.mp3');
+  sfx6 = loadSound('assets/sound/timber.mp3');
 
   // 背景画像をロード
   bgImage = loadImage('assets/image/26c7e1f160f76c671d2365446534ee91_t.jpeg');
@@ -122,6 +122,7 @@ function setup() {
   sfx3.setVolume(0.05); //(初期値:0.3)
   sfx4.setVolume(0.2); //(初期値:0.8)
   sfx5.setVolume(0.2);
+  sfx6.setVolume(0.2);
 
   // アニメーション定義をスタイルタグに追加
   let styleElement = createElement('style', `
@@ -355,6 +356,9 @@ function startTimer() {
       countdownDiv.html('残り時間: ' + timer); // 残り時間を0に更新
       clearInterval(timerInterval); // タイマーを停止
       endGame(); // ゲーム終了
+    } else if (timer <= 6) {
+      sfx6.play(); // sfx6を再生
+      timer--;
     } else {
       timer--;
     }
@@ -547,7 +551,7 @@ function draw() {
         } else {
           lastCountDiv.html(timer);
         }
-      } else if (timer < 1) {
+      } else if (timer <= 0) {
         if (lastCountDiv) {
           lastCountDiv.remove();
           lastCountDiv = null;
