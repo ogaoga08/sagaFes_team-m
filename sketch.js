@@ -167,20 +167,20 @@ function playBgm(bgm) {
   currentBgm = bgm;
 }
 
-function playSfx(sfx1) {
+function playSfx2sec(sfx) {
   // 効果音を再生
-  sfx1.play();
+  sfx.play();
   // 2秒後に効果音を停止
   setTimeout(() => {
-    sfx1.stop();
+    sfx.stop();
   }, 2000);
 }
-function playSfx(sfx3) {
+function playSfx8sec(sfx) {
   // 効果音を再生
-  sfx3.play();
+  sfx.play();
   // 8秒後に効果音を停止
   setTimeout(() => {
-    sfx3.stop();
+    sfx.stop();
   }, 8000);
 }
 
@@ -192,7 +192,7 @@ function createLightning() {
   let currentX = startX;
   let currentY = startY;
   bolt.push([currentX, currentY]);
-  playSfx(sfx5);
+  playSfx2sec(sfx5);
   // 雷が画面の下に到達するまで、ランダムなパターンで進む
   while (currentY < height) {
     let nextX = currentX + random(-20, 20); // 雷がランダムに左右にずれる
@@ -328,7 +328,7 @@ function startGame() {
 
   startTimer(); // タイマーを開始
   playBgm(bgm1);
-  playSfx(sfx2);
+  playSfx2sec(sfx2);
 }
 
 function startGameHardMode() {
@@ -344,8 +344,8 @@ function startGameHardMode() {
   allFireworks = []; // 花火をリセット
 
   startTimer(); // タイマーを開始
-  playSfx(sfx2);
-  playSfx(sfx3);//この後３秒くらい遅らせてつぎへ？
+  playSfx2sec(sfx2);
+  playSfx8sec(sfx3);//この後３秒くらい遅らせてつぎへ？
   playBgm(bgm3);
 }
 
@@ -365,10 +365,8 @@ function startTimer() {
   }, 1000);
 }
 
-
-
 function endGame() {
-  playSfx(sfx4);
+  playSfx8sec(sfx4);
   gameStarted = false;
   timerActive = false;
   gameOver = true;
@@ -403,7 +401,7 @@ function endGame() {
   backButton.position(width / 2 - 150, height / 2 + 140); // 位置調整
   backButton.size(300, 120);
   backButton.mousePressed(() => {
-    playSfx(sfx2);
+    playSfx2sec(sfx2);
     resetGame();
   }
   )
@@ -558,51 +556,52 @@ function draw() {
         }
       }
     }
-  }
-
-  //レベル１クリア -> タイマーを10秒追加してレベル２へ
-  if (levelNum == 1){
-    if(explosionCount >= 60){
-      timer += 5;
-      levelNum++;
-      showNumberAndLevels = true;
-      displayTimer = 50;
+    
+    //レベル１クリア -> タイマーを10秒追加してレベル２へ
+    if (levelNum == 1){
+      if(explosionCount >= 60){
+        timer += 5;
+        levelNum++;
+        showNumberAndLevels = true;
+        displayTimer = 50;
+      }
+    }
+    //レベル2クリア -> タイマーを10秒追加してレベル３へ
+    if (levelNum == 2){
+      if(explosionCount >= 100){
+        timer += 10;
+        levelNum++;
+        showNumberAndLevels = true;
+        displayTimer = 100;
+      }
+    }
+  
+    //レベル3クリア -> タイマーを10秒追加してレベル4へ
+    if (levelNum == 3){
+      if(explosionCount >= 120){
+        timer += 5;
+        levelNum++;
+        showNumberAndLevels = true;
+        displayTimer = 50;
+        
+      }
+    }
+  
+    //レベル4クリア -> タイマーを10秒追加してレベル5へ
+    if (levelNum == 4){
+      if(explosionCount >= 150){
+        timer += 5;
+        levelNum++;
+        showNumberAndLevels = true;
+        displayTimer = 50;
+      }
+    }
+  
+    if(showNumberAndLevels){
+      showAddedTimeAndLevels();
     }
   }
-  //レベル2クリア -> タイマーを10秒追加してレベル３へ
-  if (levelNum == 2){
-    if(explosionCount >= 100){
-      timer += 10;
-      levelNum++;
-      showNumberAndLevels = true;
-      displayTimer = 100;
-    }
-  }
 
-  //レベル3クリア -> タイマーを10秒追加してレベル4へ
-  if (levelNum == 3){
-    if(explosionCount >= 120){
-      timer += 5;
-      levelNum++;
-      showNumberAndLevels = true;
-      displayTimer = 50;
-      
-    }
-  }
-
-  //レベル4クリア -> タイマーを10秒追加してレベル5へ
-  if (levelNum == 4){
-    if(explosionCount >= 150){
-      timer += 5;
-      levelNum++;
-      showNumberAndLevels = true;
-      displayTimer = 50;
-    }
-  }
-
-  if(showNumberAndLevels){
-    showAddedTimeAndLevels();
-  }
 
 
 function showAddedTimeAndLevels(){
@@ -637,7 +636,7 @@ class Firework {
       let p = new Particle(this.firework.pos.x, this.firework.pos.y, false, this.emoji);
       this.particles.push(p);
     }
-    playSfx(sfx1);
+    playSfx2sec(sfx1);
     explosionCount++; // Increment explosion counter
   }
 
