@@ -669,7 +669,7 @@ class Particle {
     if (this.firework) {
       if (hardMode) {
         // ハードモードの場合の速度設定
-        this.vel = createVector(0, random(-40, -20));
+        this.vel = createVector(0, random(-36, -20));
       } else {
         // 通常モードの場合の速度設定
         this.vel = createVector(0, random(-19, -15));
