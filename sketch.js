@@ -33,7 +33,7 @@ let disgustedG = 0;
 let surprisedG = 0;
 let fearfulG = 0;
 
-let shootingRate = 0.01; //5つの絵文字が等確率で出てくるから、1つの時より低めに
+let shootingRate = 0.01; 
 
 let bgm1, bgm2, bgm3, bgm4;
 let currentBgm;
@@ -52,6 +52,9 @@ let scoreDiv;
 let countdownDiv;
 let scoreCountDiv;
 let lastCountDiv;
+
+//　ハードモードか
+let hardMode = false;
 
 function preload() {
   //画像を読み込む
@@ -85,7 +88,6 @@ function preload() {
 function setup() {
   canvas = createCanvas(windowWidth, windowHeight);
   colorMode(HSB);
-  gravity = createVector(0, 0.3); //重力設定
   stroke(255);
   strokeWeight(4);
 
@@ -324,6 +326,8 @@ function startGame() {
   timer = 20; // タイマーをリセット
   shootingRate = 0.0025;
 
+  gravity = createVector(0, 0.3); //重力設定
+
   allFireworks = [];// 花火をリセット
 
   startTimer(); // タイマーを開始
@@ -339,7 +343,11 @@ function startGameHardMode() {
   timerActive = true;
   gameOver = false;
   timer = 30; // タイマーをリセット
-  shootingRate = 0.01;
+  shootingRate = 0.005;
+
+  gravity = createVector(0, 0.8);
+
+  hardMode = true;
 
   allFireworks = []; // 花火をリセット
 
@@ -556,7 +564,7 @@ function draw() {
         }
       }
     }
-    
+
     //レベル１クリア -> タイマーを10秒追加してレベル２へ
     if (levelNum == 1){
       if(explosionCount >= 60){
@@ -659,9 +667,13 @@ class Particle {
     this.emoji = emoji;
 
     if (this.firework) {
-      //速度(打ち上がる高さ) 適正値はモニターの大きさ、設定した重力、減速の割合によって変化する
-      this.vel = createVector(0, random(-19, -15)); /////
-      /////////////////////////////////(上限,下限)////////
+      if (hardMode) {
+        // ハードモードの場合の速度設定
+        this.vel = createVector(0, random(-40, -20));
+      } else {
+        // 通常モードの場合の速度設定
+        this.vel = createVector(0, random(-19, -15));
+      }
     } else {
       this.vel = p5.Vector.random2D();
       this.vel.mult(random(2, 10));
@@ -677,7 +689,7 @@ class Particle {
 
   update() { 
     if (!this.firework) {
-      this.vel.mult(0.9); //減速の割合 値0.9で各フレームごとに1０％減速
+      this.vel.mult(1); //減速の割合 値0.9で各フレームごとに1０％減速
       this.lifespan -= 4;
     }
 
