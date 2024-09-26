@@ -328,6 +328,8 @@ function startGame() {
 
   gravity = createVector(0, 0.3); //重力設定
 
+  hardMode = false;
+
   allFireworks = [];// 花火をリセット
 
   startTimer(); // タイマーを開始
@@ -343,7 +345,7 @@ function startGameHardMode() {
   timerActive = true;
   gameOver = false;
   timer = 30; // タイマーをリセット
-  shootingRate = 0.005;
+  shootingRate = 0.0075;
 
   gravity = createVector(0, 0.8);
 
@@ -459,6 +461,7 @@ function resetGame() {
   }
   playBgm(bgm4);
 }
+
 function draw() {
   if (titleVisible && !titleDiv) {
     // HTMLのdivを作成してタイトルを表示
@@ -567,41 +570,56 @@ function draw() {
 
     //レベル１クリア -> タイマーを10秒追加してレベル２へ
     if (levelNum == 1){
-      if(explosionCount >= 60){
-        timer += 5;
+      if(explosionCount >= 40){
+        timer += 10;
         levelNum++;
         showNumberAndLevels = true;
         displayTimer = 50;
+        if (lastCountDiv) {
+          lastCountDiv.remove();
+          lastCountDiv = null;
+        }
       }
     }
     //レベル2クリア -> タイマーを10秒追加してレベル３へ
     if (levelNum == 2){
-      if(explosionCount >= 100){
+      if(explosionCount >= 60){
         timer += 10;
         levelNum++;
         showNumberAndLevels = true;
         displayTimer = 100;
+        if (lastCountDiv) {
+          lastCountDiv.remove();
+          lastCountDiv = null;
+        }
       }
     }
   
     //レベル3クリア -> タイマーを10秒追加してレベル4へ
     if (levelNum == 3){
-      if(explosionCount >= 120){
-        timer += 5;
+      if(explosionCount >= 80){
+        timer += 10;
         levelNum++;
         showNumberAndLevels = true;
         displayTimer = 50;
-        
+        if (lastCountDiv) {
+          lastCountDiv.remove();
+          lastCountDiv = null;
+        }
       }
     }
   
     //レベル4クリア -> タイマーを10秒追加してレベル5へ
     if (levelNum == 4){
-      if(explosionCount >= 150){
-        timer += 5;
+      if(explosionCount >= 100){
+        timer += 10;
         levelNum++;
         showNumberAndLevels = true;
         displayTimer = 50;
+        if (lastCountDiv) {
+          lastCountDiv.remove();
+          lastCountDiv = null;
+        }
       }
     }
   
@@ -610,13 +628,11 @@ function draw() {
     }
   }
 
-
-
 function showAddedTimeAndLevels(){
   textSize(100);      
   fill(255);  
   textAlign(CENTER, CENTER);  
-  text("+5秒", width / 2, height / 2 + 50); //レベルごとに異なる追加秒数を表示できるようにしたい
+  text("+10秒", width / 2, height / 2 + 50); //レベルごとに異なる追加秒数を表示できるようにしたい
 
   text("れべる " + levelNum, width / 2, height / 2 - 100);
 
@@ -689,7 +705,7 @@ class Particle {
 
   update() { 
     if (!this.firework) {
-      this.vel.mult(1); //減速の割合 値0.9で各フレームごとに1０％減速
+      this.vel.mult(0.95); //減速の割合 値0.9で各フレームごとに1０％減速
       this.lifespan -= 4;
     }
 
