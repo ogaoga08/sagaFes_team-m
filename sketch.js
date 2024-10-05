@@ -384,16 +384,16 @@ function endGame() {
   gameOver = true;
   clearInterval(timerInterval); // タイマーを停止
 
-  // データベースが存在しない場合に初期化
-  alasql('CREATE TABLE IF NOT EXISTS scores (id INT AUTO_INCREMENT, explosionCount INT)');
+  // // データベースが存在しない場合に初期化
+  // alasql('CREATE TABLE IF NOT EXISTS scores (id INT AUTO_INCREMENT, explosionCount INT)');
   
-  // 現在のexplosionCountをデータベースに保存
-  alasql('INSERT INTO scores (explosionCount) VALUES (?)', [explosionCount]);
+  // // 現在のexplosionCountをデータベースに保存
+  // alasql('INSERT INTO scores (explosionCount) VALUES (?)', [explosionCount]);
 
-  // スコアを降順で取得して上位5件を表示
-  topScores = alasql('SELECT * FROM scores ORDER BY explosionCount DESC LIMIT 5');
+  // // スコアを降順で取得して上位5件を表示
+  // topScores = alasql('SELECT * FROM scores ORDER BY explosionCount DESC LIMIT 5');
 
-  console.log(topScores);
+  // console.log(topScores);
 
   // タイムアップのテキスト
   endDiv = createDiv('たいむあっぷ！');
