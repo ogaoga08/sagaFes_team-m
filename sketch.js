@@ -57,6 +57,24 @@ let lastCountDiv;
 let hardMode = false;
 
 let topScores;
+let scoreLine;
+let rankingDiv;
+
+window.onload = function() {
+  // LocalStorageからデータを読み込む
+  let savedData = localStorage.getItem('scoreData');
+  if (savedData) {
+    // LocalStorageから取得したデータをAlaSQLに挿入
+    alasql('CREATE TABLE IF NOT EXISTS scores (id INT AUTO_INCREMENT, explosionCount INT)');
+    let parsedData = JSON.parse(savedData);
+    parsedData.forEach(row => {
+      alasql('INSERT INTO scores VALUES ?', [row]);
+    });
+  } else {
+    // テーブルが存在しない場合、新規作成
+    alasql('CREATE TABLE IF NOT EXISTS scores (id INT AUTO_INCREMENT, explosionCount INT)');
+  }
+};
 
 function preload() {
   //画像を読み込む
@@ -418,8 +436,8 @@ function endGame() {
   scoreDiv.style('animation', 'bounce 2s infinite');  // アニメーション追加
 
   // ランキングを表示するDivを作成
-  let rankingDiv = createDiv('ランキング');
-  rankingDiv.position(width / 3, height / 2 + 100);
+  rankingDiv = createDiv('ランキング');
+  rankingDiv.position(width - 420, height / 2 + 100);
   rankingDiv.style('font-size', '32px');
   rankingDiv.style('color', 'white');
   rankingDiv.style('text-align', 'center');
@@ -429,7 +447,7 @@ function endGame() {
 
   // 上位5つのスコアを表示
   topScores.forEach((score, index) => {
-    let scoreLine = createDiv((index + 1) + '位: ' + score.explosionCount + ' 点');
+    scoreLine = createDiv((index + 1) + '位: ' + score.explosionCount + ' 点');
     scoreLine.parent(rankingDiv);
     scoreLine.style('font-size', '24px');
     scoreLine.style('color', 'white');
@@ -477,6 +495,14 @@ function resetGame() {
   if (lastCountDiv) {
     lastCountDiv.remove();
     lastCountDiv = null;
+  }
+  if (scoreLine) {
+    scoreLine.remove();
+    scoreLine = null;
+  }
+  if (rankingDiv) {
+    rankingDiv.remove();
+    rankingDiv = null;
   }
 
   titleVisible = true;
