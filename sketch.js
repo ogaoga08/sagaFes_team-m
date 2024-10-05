@@ -11,7 +11,7 @@ let canvas;
 let startButton, hardModeButton, backButton;
 let gameStarted = false;
 let titleVisible = true;
-let timer // タイマー初期値
+let timer = 30; // タイマー初期値
 let timerActive = false; // タイマーがアクティブかどうか
 let gameOver = false; // ゲームが終了しているかどうか
 let timerInterval;
@@ -33,7 +33,7 @@ let disgustedG = 0;
 let surprisedG = 0;
 let fearfulG = 0;
 
-let shootingRate; 
+let shootingRate = 0.01; 
 
 let bgm1, bgm2, bgm3, bgm4;
 let currentBgm;
