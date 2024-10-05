@@ -384,16 +384,16 @@ function endGame() {
   gameOver = true;
   clearInterval(timerInterval); // タイマーを停止
 
-  // // データベースが存在しない場合に初期化
-  // alasql('CREATE TABLE IF NOT EXISTS scores (id INT AUTO_INCREMENT, explosionCount INT)');
+  // データベースが存在しない場合に初期化
+  alasql('CREATE TABLE IF NOT EXISTS scores (id INT AUTO_INCREMENT, explosionCount INT)');
   
-  // // 現在のexplosionCountをデータベースに保存
-  // alasql('INSERT INTO scores (explosionCount) VALUES (?)', [explosionCount]);
+  // 現在のexplosionCountをデータベースに保存
+  alasql('INSERT INTO scores (explosionCount) VALUES (?)', [explosionCount]);
 
-  // // スコアを降順で取得して上位5件を表示
-  // topScores = alasql('SELECT * FROM scores ORDER BY explosionCount DESC LIMIT 5');
+  // スコアを降順で取得して上位5件を表示
+  topScores = alasql('SELECT * FROM scores ORDER BY explosionCount DESC LIMIT 5');
 
-  // console.log(topScores);
+  console.log(topScores);
 
   // タイムアップのテキスト
   endDiv = createDiv('たいむあっぷ！');
@@ -417,26 +417,26 @@ function endGame() {
   scoreDiv.style('text-shadow', '4px 4px 8px rgba(200, 0, 0, 0.7)');
   scoreDiv.style('animation', 'bounce 2s infinite');  // アニメーション追加
 
-  // // ランキングを表示するDivを作成
-  // let rankingDiv = createDiv('ランキング');
-  // rankingDiv.position(width / 3, height / 2 + 100);
-  // rankingDiv.style('font-size', '32px');
-  // rankingDiv.style('color', 'white');
-  // rankingDiv.style('text-align', 'center');
-  // rankingDiv.style('font-family', 'Noto Serif JP');
-  // rankingDiv.style('width', '600px');
-  // rankingDiv.style('text-shadow', '4px 4px 8px rgba(200, 0, 0, 0.7)');
+  // ランキングを表示するDivを作成
+  let rankingDiv = createDiv('ランキング');
+  rankingDiv.position(width / 3, height / 2 + 100);
+  rankingDiv.style('font-size', '32px');
+  rankingDiv.style('color', 'white');
+  rankingDiv.style('text-align', 'center');
+  rankingDiv.style('font-family', 'Noto Serif JP');
+  rankingDiv.style('width', '600px');
+  rankingDiv.style('text-shadow', '4px 4px 8px rgba(200, 0, 0, 0.7)');
 
-  // // 上位5つのスコアを表示
-  // topScores.forEach((score, index) => {
-  //   let scoreLine = createDiv((index + 1) + '位: ' + score.explosionCount + ' 点');
-  //   scoreLine.parent(rankingDiv);
-  //   scoreLine.style('font-size', '24px');
-  //   scoreLine.style('color', 'white');
-  //   scoreLine.style('text-align', 'center');
-  //   scoreLine.style('font-family', 'Noto Serif JP');
-  //   scoreLine.style('text-shadow', '2px 2px 4px rgba(200, 0, 0, 0.7)');
-  // });
+  // 上位5つのスコアを表示
+  topScores.forEach((score, index) => {
+    let scoreLine = createDiv((index + 1) + '位: ' + score.explosionCount + ' 点');
+    scoreLine.parent(rankingDiv);
+    scoreLine.style('font-size', '24px');
+    scoreLine.style('color', 'white');
+    scoreLine.style('text-align', 'center');
+    scoreLine.style('font-family', 'Noto Serif JP');
+    scoreLine.style('text-shadow', '2px 2px 4px rgba(200, 0, 0, 0.7)');
+  });
 
   backButton = createButton('戻る');
   backButton.style('font-family', 'Noto Serif JP'); // フォントファミリーを指定
@@ -784,9 +784,8 @@ class HappyFirework extends Firework {
       this.firework.applyForce(gravity);
       this.firework.update();
       
-      //ハッピー95%でばくはつ
       if (this.firework.vel.y >= 0) {
-        if (happyG * 100 >= 0.95) { 
+        if (happyG * 100 >= 0.98) { 
           this.exploded = true;
           this.explode();
         }
@@ -824,9 +823,8 @@ class SadFirework extends Firework {
       this.firework.applyForce(gravity);
       this.firework.update();
       
-      //SAD95%でばくはつ
       if (this.firework.vel.y >= 0) {
-        if (sadG * 100 >= 0.95) { 
+        if (sadG * 100 >= 0.98) { 
           this.exploded = true;
           this.explode(); 
         }
@@ -866,7 +864,7 @@ class AngryFirework extends Firework {
       
       //Angry90%でばくはつ && かみなり発動
       if (this.firework.vel.y >= 0) {
-        if (angerG * 100 >= 0.95) { 
+        if (angerG * 100 >= 0.98) { 
           this.exploded = true;
           this.explode();
           doLightning(); // 雷を発生させる
@@ -947,7 +945,7 @@ class SurprisedFirework extends Firework {
       
       //サプライズ90%でばくはつ
       if (this.firework.vel.y >= 0) {
-        if (surprisedG * 100 >= 0.95) { 
+        if (surprisedG * 100 >= 0.98) { 
           this.exploded = true;
           this.explode();
         }
@@ -987,7 +985,7 @@ class NeutralFirework extends Firework {
       
       //真顔95%でばくはつ
       if (this.firework.vel.y >= 0) {
-        if (neutralG * 100 >= 0.95) { 
+        if (neutralG * 100 >= 0.98) { 
           this.exploded = true;
           this.explode();
         }
