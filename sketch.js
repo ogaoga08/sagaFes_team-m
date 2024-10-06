@@ -355,6 +355,15 @@ function startGame() {
   startTimer(); // タイマーを開始
   playBgm(bgm1);
   playSfx2sec(sfx2);
+
+  if (scoreLine) {
+    scoreLine.remove();
+    scoreLine = null;
+  }
+  if (rankingDiv) {
+    rankingDiv.remove();
+    rankingDiv = null;
+  }
 }
 
 function startGameHardMode() {
@@ -377,6 +386,15 @@ function startGameHardMode() {
   playSfx2sec(sfx2);
   playSfx8sec(sfx3);//この後３秒くらい遅らせてつぎへ？
   playBgm(bgm3);
+
+  if (scoreLine) {
+    scoreLine.remove();
+    scoreLine = null;
+  }
+  if (rankingDiv) {
+    rankingDiv.remove();
+    rankingDiv = null;
+  }
 }
 
 function startTimer() {
@@ -496,14 +514,6 @@ function resetGame() {
   if (lastCountDiv) {
     lastCountDiv.remove();
     lastCountDiv = null;
-  }
-  if (scoreLine) {
-    scoreLine.remove();
-    scoreLine = null;
-  }
-  if (rankingDiv) {
-    rankingDiv.remove();
-    rankingDiv = null;
   }
 
   titleVisible = true;
