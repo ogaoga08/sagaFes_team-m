@@ -155,7 +155,7 @@ function setup() {
     @keyframes scaleUp {
       0% { transform: scale(1); }
       50% { transform: scale(1.5); }
-      100% { transform: scale(1); }
+      100% { transform: scale(2); }
     }
   `);
   styleElement.parent(document.head);
@@ -1020,7 +1020,6 @@ class NeutralFirework extends Firework {
       this.firework.applyForce(gravity);
       this.firework.update();
       
-      //真顔95%でばくはつ
       if (this.firework.vel.y >= 0) {
         if (neutralG * 100 >= 0.98) { 
           this.exploded = true;
