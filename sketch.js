@@ -344,7 +344,7 @@ function startGame() {
   gameStarted = true;
   timerActive = true;
   gameOver = false;
-  timer = 5; // タイマーをリセット
+  timer = 20; // タイマーをリセット
   shootingRate = 0.0025;
 
   gravity = createVector(0, 0.3); //重力設定
