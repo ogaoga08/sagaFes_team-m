@@ -316,20 +316,22 @@ function drawExpressions(detections, x, y, textYSpace){
     surprisedG = surprised;
     fearfulG = fearful;
 
+    x = x - 50;
+    y = 70;
+
     if(!gameStarted){
       textFont('Helvetica Neue');
-      textSize(14);
+      textSize(50);
     
       noStroke();
       fill(0);
 
-      text("neutral:       " + nf(neutral * 100, 2, 2) + "%", x, y);
-      text("happiness: " + nf(happy * 100, 2, 2) + "%", x, y + textYSpace);
-      text("anger:        " + nf(angry * 100, 2, 2) + "%", x, y + textYSpace * 2);
-      text("sad:            " + nf(sad * 100, 2, 2) + "%", x, y + textYSpace * 3);
-      text("disgusted: " + nf(disgusted * 100, 2, 2) + "%", x, y + textYSpace * 4);
-      text("surprised:  " + nf(surprised * 100, 2, 2) + "%", x, y + textYSpace * 5);
-      text("fear:           " + nf(fearful * 100, 2, 2) + "%", x, y + textYSpace * 6);
+      text("😐 : " + nf(neutral * 100, 2, 1) + "%", x, y);
+      text("😄 : " + nf(happy * 100, 2, 1) + "%", x, y + textYSpace * 2);
+      text("😡 : " + nf(angry * 100, 2, 1) + "%", x, y + textYSpace * 4);
+      text("😭 : " + nf(sad * 100, 2, 2) + "%", x, y + textYSpace * 6);
+      text("😳 : " + nf(surprised * 100, 2, 1) + "%", x, y + textYSpace * 8);
+      text("😨 : " + nf(fearful * 100, 2, 1) + "%", x, y + textYSpace * 10);
     }
     
   }
@@ -455,10 +457,10 @@ function endGame() {
 
   // ランキングを表示するDivを作成
   rankingDiv = createDiv('得点ランキング');
-  rankingDiv.position(width - 550, height / 2 + 80);
-  rankingDiv.style('font-size', '50px');
+  rankingDiv.position(width - 620, 20);
+  rankingDiv.style('font-size', '60px');
   rankingDiv.style('color', 'white');
-  rankingDiv.style('text-align', 'center');
+  rankingDiv.style('text-align', 'right');
   rankingDiv.style('font-family', 'Noto Serif JP');
   rankingDiv.style('width', '600px');
   rankingDiv.style('text-shadow', '4px 4px 8px rgba(200, 0, 0, 0.7)');
@@ -467,9 +469,9 @@ function endGame() {
   topScores.forEach((score, index) => {
     scoreLine = createDiv((index + 1) + '位: ' + score.explosionCount + ' 点');
     scoreLine.parent(rankingDiv);
-    scoreLine.style('font-size', '30px');
+    scoreLine.style('font-size', '60px');
     scoreLine.style('color', 'white');
-    scoreLine.style('text-align', 'center');
+    scoreLine.style('text-align', 'right');
     scoreLine.style('font-family', 'Noto Serif JP');
     scoreLine.style('text-shadow', '2px 2px 4px rgba(200, 0, 0, 0.7)');
   });
@@ -488,7 +490,15 @@ function endGame() {
   if (lastCountDiv) {
     lastCountDiv.remove();
     lastCountDiv = null;
-  }
+  };
+  if (countdownDiv) {
+    countdownDiv.remove();
+    countdownDiv = null;
+  };
+  if (scoreCountDiv) {
+    scoreCountDiv.remove();
+    scoreCountDiv = null;
+  };
 }
 
 function resetGame() {
