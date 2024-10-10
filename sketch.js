@@ -130,21 +130,21 @@ function setup() {
   hard();
 
   // 音量を設定
-  let bgmVolume = 0.1; // BGMの音量(初期値:0.5)
+  let bgmVolume = 0.5; // BGMの音量(初期値:0.5)
 
   // BGMの音量を設定
   bgm1.setVolume(bgmVolume);
   bgm2.setVolume(bgmVolume);
   bgm3.setVolume(bgmVolume);
-  bgm4.setVolume(0.05);
+  bgm4.setVolume(0.2);
 
   // 効果音の音量を設定
-  sfx1.setVolume(0.6); //(初期値:3)
-  sfx2.setVolume(0.2); //(初期値:0.8)
-  sfx3.setVolume(0.05); //(初期値:0.3)
-  sfx4.setVolume(0.2); //(初期値:0.8)
-  sfx5.setVolume(0.2);
-  sfx6.setVolume(0.2);
+  sfx1.setVolume(3); //(初期値:3)
+  sfx2.setVolume(0.8); //(初期値:0.8)
+  sfx3.setVolume(0.3); //(初期値:0.3)
+  sfx4.setVolume(0.8); //(初期値:0.8)
+  sfx5.setVolume(0.8);
+  sfx6.setVolume(0.8);
 
   // アニメーション定義をスタイルタグに追加
   let styleElement = createElement('style', `
@@ -154,7 +154,6 @@ function setup() {
     }
     @keyframes scaleUp {
       0% { transform: scale(1); }
-      50% { transform: scale(1.5); }
       100% { transform: scale(2); }
     }
   `);
@@ -343,7 +342,7 @@ function startGame() {
   gameStarted = true;
   timerActive = true;
   gameOver = false;
-  timer = 20; // タイマーをリセット
+  timer = 5; // タイマーをリセット
   shootingRate = 0.0025;
 
   gravity = createVector(0, 0.3); //重力設定
@@ -434,19 +433,19 @@ function endGame() {
 
   // タイムアップのテキスト
   endDiv = createDiv('たいむあっぷ！');
-  endDiv.position(width / 2 - 180, height / 3);  // 位置を中央に
-  endDiv.style('font-size', '56px');
+  endDiv.position(width / 2 - 280, height / 3);  // 位置を中央に
+  endDiv.style('font-size', '70px');
   endDiv.style('color', 'white');
   endDiv.style('text-align', 'center');
   endDiv.style('font-family', 'Noto Serif JP');
-  endDiv.style('width', '400px');
+  endDiv.style('width', '600px');
   endDiv.style('text-shadow', '4px 4px 8px rgba(200, 0, 0, 0.7)');
   endDiv.style('animation', 'bounce 2s infinite');  // アニメーション追加
 
   // スコアのテキスト
   scoreDiv = createDiv('スコア: ' + explosionCount);
   scoreDiv.position(width / 3, height / 2 - height / 40);  // 位置を中央に
-  scoreDiv.style('font-size', '32px');
+  scoreDiv.style('font-size', '46px');
   scoreDiv.style('color', 'white');
   scoreDiv.style('text-align', 'center');
   scoreDiv.style('font-family', 'Noto Serif JP');
@@ -455,9 +454,9 @@ function endGame() {
   scoreDiv.style('animation', 'bounce 2s infinite');  // アニメーション追加
 
   // ランキングを表示するDivを作成
-  rankingDiv = createDiv('ランキング');
-  rankingDiv.position(width - 420, height / 2 + 100);
-  rankingDiv.style('font-size', '32px');
+  rankingDiv = createDiv('得点ランキング');
+  rankingDiv.position(width - 550, height / 2 + 80);
+  rankingDiv.style('font-size', '50px');
   rankingDiv.style('color', 'white');
   rankingDiv.style('text-align', 'center');
   rankingDiv.style('font-family', 'Noto Serif JP');
@@ -468,7 +467,7 @@ function endGame() {
   topScores.forEach((score, index) => {
     scoreLine = createDiv((index + 1) + '位: ' + score.explosionCount + ' 点');
     scoreLine.parent(rankingDiv);
-    scoreLine.style('font-size', '24px');
+    scoreLine.style('font-size', '30px');
     scoreLine.style('color', 'white');
     scoreLine.style('text-align', 'center');
     scoreLine.style('font-family', 'Noto Serif JP');
@@ -536,12 +535,12 @@ function draw() {
   if (titleVisible && !titleDiv) {
     // HTMLのdivを作成してタイトルを表示
     titleDiv = createDiv('花火げゑむ');
-    titleDiv.position(width / 2 - 150, height / 3);  // 位置調整
-    titleDiv.style('font-size', '56px');  // テキストサイズを指定
+    titleDiv.position(width / 2 - 300, height / 3);  // 位置調整
+    titleDiv.style('font-size', '80px');  // テキストサイズを指定
     titleDiv.style('color', 'white');  // テキストの色を指定
     titleDiv.style('text-align', 'center');  // 中央揃え
     titleDiv.style('Noto Serif JP'); // フォントを設定
-    titleDiv.style('width', '300px');  // テキストの幅を指定
+    titleDiv.style('width', '600px');  // テキストの幅を指定
     titleDiv.style('text-shadow', '4px 4px 8px rgba(200, 0, 0, 0.7)');  // シャドウエフェクトを適用
     titleDiv.style('animation', 'bounce 2s infinite');  // アニメーションを適用
 
@@ -589,12 +588,12 @@ function draw() {
     if (timerActive) {
       if (!countdownDiv) {
         countdownDiv = createDiv('残り時間: ' + timer);
-        countdownDiv.position(width - 420, 20);  // 位置調整
-        countdownDiv.style('font-size', '32px');  // テキストサイズを指定
+        countdownDiv.position(width - 620, 20);  // 位置調整
+        countdownDiv.style('font-size', '50px');  // テキストサイズを指定
         countdownDiv.style('color', 'white');  // テキストの色を指定
         countdownDiv.style('text-align', 'right');  // 右揃え
         countdownDiv.style('font-family', 'Noto Serif JP'); // フォントを設定
-        countdownDiv.style('width', '400px');  // テキストの幅を指定
+        countdownDiv.style('width', '600px');  // テキストの幅を指定
         countdownDiv.style('text-shadow', '2px 2px 4px rgba(200, 0, 0, 0.7)');  // シャドウエフェクトを適用
       } else {
         countdownDiv.html('残り時間: ' + timer);
@@ -602,12 +601,12 @@ function draw() {
 
       if (!scoreCountDiv) {
         scoreCountDiv = createDiv('爆発した花火の数: ' + explosionCount);
-        scoreCountDiv.position(width - 420, 60);  // 位置調整
-        scoreCountDiv.style('font-size', '32px');  // テキストサイズを指定
+        scoreCountDiv.position(width - 620, 80);  // 位置調整
+        scoreCountDiv.style('font-size', '50px');  // テキストサイズを指定
         scoreCountDiv.style('color', 'white');  // テキストの色を指定
         scoreCountDiv.style('text-align', 'right');  // 右揃え
         scoreCountDiv.style('font-family', 'Noto Serif JP'); // フォントを設定
-        scoreCountDiv.style('width', '400px');  // テキストの幅を指定
+        scoreCountDiv.style('width', '600px');  // テキストの幅を指定
         scoreCountDiv.style('text-shadow', '2px 2px 4px rgba(200, 0, 0, 0.7)');  // シャドウエフェクトを適用
       } else {
         scoreCountDiv.html('爆発した花火の数: ' + explosionCount);
