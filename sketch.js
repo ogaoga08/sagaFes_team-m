@@ -281,11 +281,11 @@ function gotFaces(error, result) {
 function drawBoxs(detections){
   if (detections.length > 0) {//If at least 1 face is detected: 
     for (f=0; f < detections.length; f++){
-      let {_x, _y, _width, _height} = detections[f].alignedRect._box;
+      let {_x, _y, _width, _height} = detections[0].alignedRect._box;
       stroke(44, 225, 225);
-      strokeWeight(1);
+      strokeWeight(5);
       noFill();
-      rect(_x, _y -100, _width, _height + 200);
+      rect(_x, _y -100, _width, _height + 100);
     }
   }
 }
@@ -806,7 +806,7 @@ class Particle {
       stroke(this.hu, 255, 255);
       //Firework (use image)
       imageMode(CENTER);
-      image(this.emoji, this.pos.x, this.pos.y, 50, 50); //emojiの大きさ、サイズ
+      image(this.emoji, this.pos.x, this.pos.y, 100, 100); //emojiの大きさ、サイズ
     }
     point(this.pos.x, this.pos.y);
   }
