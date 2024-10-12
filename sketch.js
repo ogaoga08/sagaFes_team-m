@@ -650,7 +650,7 @@ function draw() {
     //レベル１クリア -> タイマーを10秒追加してレベル２へ
     if (levelNum == 1){
       if(explosionCount >= 40){
-        timer += 10;
+        timer += 5;
         levelNum++;
         showNumberAndLevels = true;
         displayTimer = 50;
@@ -663,7 +663,7 @@ function draw() {
     //レベル2クリア -> タイマーを10秒追加してレベル３へ
     if (levelNum == 2){
       if(explosionCount >= 60){
-        timer += 10;
+        timer += 5;
         levelNum++;
         showNumberAndLevels = true;
         displayTimer = 100;
@@ -677,7 +677,7 @@ function draw() {
     //レベル3クリア -> タイマーを10秒追加してレベル4へ
     if (levelNum == 3){
       if(explosionCount >= 80){
-        timer += 10;
+        timer += 5;
         levelNum++;
         showNumberAndLevels = true;
         displayTimer = 50;
@@ -691,7 +691,7 @@ function draw() {
     //レベル4クリア -> タイマーを10秒追加してレベル5へ
     if (levelNum == 4){
       if(explosionCount >= 100){
-        timer += 10;
+        timer += 5;
         levelNum++;
         showNumberAndLevels = true;
         displayTimer = 50;
@@ -711,7 +711,7 @@ function showAddedTimeAndLevels(){
   textSize(100);      
   fill(255);  
   textAlign(CENTER, CENTER);  
-  text("+10秒", width / 2, height / 2 + 50); //レベルごとに異なる追加秒数を表示できるようにしたい
+  text("+5秒", width / 2, height / 2 + 50); //レベルごとに異なる追加秒数を表示できるようにしたい
 
   text("れべる " + levelNum, width / 2, height / 2 - 100);
 
@@ -806,7 +806,7 @@ class Particle {
       stroke(this.hu, 255, 255);
       //Firework (use image)
       imageMode(CENTER);
-      image(this.emoji, this.pos.x, this.pos.y, 100, 100); //emojiの大きさ、サイズ
+      image(this.emoji, this.pos.x, this.pos.y, 70, 70); //emojiの大きさ、サイズ
     }
     point(this.pos.x, this.pos.y);
   }
