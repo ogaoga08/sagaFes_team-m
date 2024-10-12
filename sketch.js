@@ -270,10 +270,8 @@ function gotFaces(error, result) {
 
   clear();
   
-  if(!gameStarted){
-    drawBoxs(detections);
-    // drawLandmarks(detections);
-  }
+  drawBoxs(detections);
+  // drawLandmarks(detections);
   
   drawExpressions(detections, 80, 250, 28); //表情の値をこの関数外でグローバル変数に格納できれば処理減らせられる
   
