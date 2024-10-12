@@ -70,6 +70,8 @@ window.onload = function() {
     parsedData.forEach(row => {
       alasql('INSERT INTO scores VALUES ?', [row]);
     });
+    // alasql('DELETE FROM scores');
+    // これを実行すると、データベースの内容がリセットされる
   } else {
     // テーブルが存在しない場合、新規作成
     alasql('CREATE TABLE IF NOT EXISTS scores (id INT AUTO_INCREMENT, explosionCount INT)');
@@ -319,7 +321,7 @@ function drawExpressions(detections, x, y, textYSpace){
     x = x - 50;
     y = 70;
 
-    if(!gameStarted){
+    if(!gameStarted && titleVisible){
       textFont('Helvetica Neue');
       textSize(50);
     
@@ -499,6 +501,9 @@ function endGame() {
     scoreCountDiv.remove();
     scoreCountDiv = null;
   };
+  if (showNumberAndLevels) {
+    showNumberAndLevels = false;
+  }
 }
 
 function resetGame() {
