@@ -132,7 +132,7 @@ function setup() {
   hard();
 
   // 音量を設定
-  let bgmVolume = 0.5; // BGMの音量(初期値:0.5)
+  let bgmVolume = 0.6; // BGMの音量(初期値:0.5)
 
   // BGMの音量を設定
   bgm1.setVolume(bgmVolume);
