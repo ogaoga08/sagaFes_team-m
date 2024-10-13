@@ -329,7 +329,7 @@ function drawExpressions(detections, x, y, textYSpace){
       text("😐 : " + nf(neutral * 100, 2, 1) + "%", x, y);
       text("😄 : " + nf(happy * 100, 2, 1) + "%", x, y + textYSpace * 2);
       text("😡 : " + nf(angry * 100, 2, 1) + "%", x, y + textYSpace * 4);
-      text("😭 : " + nf(sad * 100, 2, 2) + "%", x, y + textYSpace * 6);
+      text("😭 : " + nf(sad * 100, 2, 1) + "%", x, y + textYSpace * 6);
       text("😳 : " + nf(surprised * 100, 2, 1) + "%", x, y + textYSpace * 8);
       text("😨 : " + nf(fearful * 100, 2, 1) + "%", x, y + textYSpace * 10);
     }
@@ -345,7 +345,7 @@ function startGame() {
   timerActive = true;
   gameOver = false;
   timer = 20; // タイマーをリセット
-  shootingRate = 0.0025;
+  shootingRate = 0.0035;
 
   gravity = createVector(0, 0.3); //重力設定
 
