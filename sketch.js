@@ -809,7 +809,7 @@ class Particle {
       stroke(this.hu, 255, 255);
       //Firework (use image)
       imageMode(CENTER);
-      image(this.emoji, this.pos.x, this.pos.y, 70, 70); //emojiの大きさ、サイズ
+      image(this.emoji, this.pos.x, this.pos.y, 50, 50); //emojiの大きさ、サイズ
     }
     point(this.pos.x, this.pos.y);
   }
